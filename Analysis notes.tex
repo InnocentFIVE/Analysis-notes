@@ -1,0 +1,1098 @@
+\documentclass{ctexart}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{fixdif}
+\usepackage{mathtools}
+\usepackage{eucal}
+\usepackage{amscd}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{pifont}
+
+\setmainfont{Minion Pro}[
+    Ligatures={TeX,Common},
+Numbers={OldStyle,Proportional},
+Kerning=On,
+SizeFeatures = {
+    {Size = -9, Font = Minion Pro Caption, FakeStretch=1.1, Scale=1},
+    {Size = 9-13.01, Font = Minion Pro},
+    {Size = 13.01-19.91, Font = Minion Pro Subhead},
+    {Size = 19.91-, Font = Minion Pro Display}
+    },
+    SlantedFeatures = {Font = Minion Pro, FakeSlant = .15},
+    BoldSlantedFeatures = {Font = Minion Pro Bold, FakeSlant = .15}
+]
+\usepackage{unicode-math}
+
+
+\setmathfont{Minion Math}[
+% SizeFeatures = {
+% {Size = -6.01, Font = MinionMath-Tiny},
+% {Size = 6.01-8.41, Font = MinionMath-Capt},
+% {Size = 8.41-13.01, Font = MinionMath-Regular},
+% {Size = 13.01-19.91, Font = MinionMath-Subh},
+% {Size = 19.91-, Font = MinionMath-Disp}},
+]
+\setmathfont{Minion Math}[range = {bfup->up,bfit->it},
+% SizeFeatures = {
+% {Size = -6.01, Font = MinionMath-BoldTiny},
+% {Size = 6.01-8.41, Font = MinionMath-BoldCapt},
+% {Size = 8.41-13.01, Font = MinionMath-Bold},
+% {Size = 13.01-19.91, Font = MinionMath-BoldSubh},
+% {Size = 19.91-, Font = MinionMath-BoldDisp}}
+]
+\setmathfont[
+Extension = .otf,
+Scale = 1,
+Script = Math,
+SizeFeatures = {
+{Size = -6, Font = MinionMath-Tiny,
+Style = MathScriptScript},
+{Size = 6-8.4, Font = MinionMath-Capt,
+Style = MathScript},
+{Size = 8.4-13, Font = MinionMath-Regular,
+Style = MathScript},
+},
+]{MinionMath-Regular}
+\setmathfont[version=bold]{MinionMath-Bold.otf}
+% \setmathfont{Minion Math}[range=it/{greek,Greek,latin,Latin,num},
+% script-features={Style=MathScript, Scale=1, FakeStretch=1.1},sscript-features={Style=MathScriptScript, Scale=.85, FakeStretch=1.15}
+% ]
+\setmathfont[range=cal]{Neo Euler}
+\setmathfont[range=scr]{Garamond-Math.otf}
+\setmathfont[range={"2211}]{Neo Euler}
+% \setmathfont[range={"007C,"2016}]{Garamond-Math.otf}
+
+\setmathfont[range=up/Greek]{Neo Euler}
+\setmathfont[range=bfsfit/{greek,Greek}]{Garamond-Math.otf}
+\setmathfont[range={}]{MinionMath-Regular.otf}
+\def\lemmaautorefname{Lemma}
+\def\sectionmark#1{\markright{\textsc{#1}}}
+
+\setsansfont{Palatino Sans LT Pro}
+
+\def\setmathstyleinmath#1#2{\settowidth{\intlength}{$#1#2$}\mkern-2mu\kern\intlength\makebox[0pt]{\rule[.5ex]{1ex}{.4pt}}\kern-\intlength}
+\newlength{\intlength}
+
+% \def\fint{\mathpalette\setmathstyleinmath\int\mkern2mu\int}
+\def\CZ{Calder\'on\,--\,Zygmind\ignorespaces}
+\def\propautorefname{Proposition}
+\let\oringalautoref\autoref
+\def\autoref#1{\textbf{[{\scshape\oringalautoref{#1}}]}}
+\makeatletter
+    \newcommand \given{}
+    \newcommand \setskip{\,}
+    \newcommand \SetSymbol[1][]{%
+    \nonscript#1\vert
+    \allowbreak
+    \nonscript
+    \mathopen{}}
+    \DeclarePairedDelimiterX\@set[1]{\lbrace}{\rbrace}%
+    {\renewcommand\given{\setskip\SetSymbol[\delimsize]\setskip}%
+    \setskip#1\setskip\mathopen{}}
+    \DeclareDocumentCommand{\@set@nostar}{O{}O{\,}m}{%
+    \renewcommand{\setskip}{#2}\@set[#1]{#3}}
+    \DeclareDocumentCommand{\@set@star}{O{\,}m}{%
+    \renewcommand{\setskip}{#1}\@set∗{#2}}
+    \newcommand\set{\@ifstar\@set@star\@set@nostar}
+    \DeclarePairedDelimiterX\@angle[1]{\langle}{\rangle}{#1}
+    \DeclareDocumentCommand{\@angle@nostar}{O{}m}
+    {\@angle[#1]{#2}}
+    \DeclareDocumentCommand{\@angle@star}{m}{\@angle∗{#1}}
+    \newcommand\<{\@ifstar\@angle@star\@angle@nostar}
+\makeatother
+
+\newtheorem{theorem}{{\scshape Theorem}}[section]
+\newtheorem{prop}{{\scshape Proposition}}[section]
+\newtheorem{cor}{{\scshape Corollary}}[section]
+\newtheorem{lemma}{{\scshape Lemma}}[section]
+\newtheorem*{remark}{{\scshape Remark}}
+\def\Cpt{\mathsf{Cpt}}
+\def\CHaus{\mathsf{CHaus}}
+\def\LCHaus{\mathsf{LCHaus}}
+\def\Tyno{\mathsf{Tyno}}
+\setCJKmainfont{FZXSSK.TTF}[BoldFont = FZXBSK.TTF]
+\setCJKfamilyfont{zhkai}{FZKaiS-Extended-1.ttf}
+\title{实分析笔记}
+\def\Cc{C_{\textup{c}}^\infty}
+\def\Lloc{\symscr{L}_{\textup{loc}}}
+\def\dtbs{\mathop{\textup{distr}}}
+\def\supp{\mathop{\textup{supp}}}
+\def\pv{\mathop{\textup{p.\ v.}}}
+\def\proofname{Proof}
+\xeCJKsetup{CJKecglue = {\hskip 0.2em plus 0.08\baselineskip}, xCJKecglue = true}
+
+
+\setmonofont{lmmonoprop10-regular.otf}
+\setCJKmonofont[Scale = MatchUppercase]{Noto Sans CJK SC}
+
+
+% \usepackage{showlabels}
+\begin{document}
+
+\def\pi{{\symup{π}}}
+\def\delta{{\symup{δ}}}
+\def\complement{\textup{c}}
+\maketitle
+% \makeatletter
+\begin{center}
+    写这篇笔记是为了让我尽可能相信它是对的.
+\end{center}
+
+\tableofcontents
+
+\section{分\kern\ccwd 布}
+分布的引入可来自Dirac $\delta $函数, 后来由Schwartz的广义函数论而推广.
+
+一个暂时够用的定义是, 分布是$\mathbb R^n$上开集$X$中光滑紧支函数空间上的连续线性泛函, 两者记为$\Cc(X)$和$\Cc(X)^*$. 其中赋予$\Cc(X)$有半范数族$\|\partial^\bullet\|_\infty$生成的拓扑, $\Cc(X)^*$以弱\/$^*$拓扑, 即在$\Cc(X)$上逐点收敛拓扑.
+
+则处理由$\Cc(X)$上的拓扑可得:
+\begin{itemize}
+    \item $\phi _\bullet\to \phi\iff\exists K\in\Cpt(X)$, $\partial^\bullet \phi _\bullet\rightrightarrows\partial^\bullet \phi$;
+    \item 考虑$\Cc(X)$和$\Cc(Y)$之间的连续函数$f$, 则必有$\forall K\Subset X$, $\exists F\Subset Y$, $f(\Cc(K))\subset f(\Cc(F))$;
+    \item $\Cc(X)$完备.
+\end{itemize}
+以下是一些分布的例子.
+\begin{itemize}
+    \item 所有局部可积函数$\Lloc^1(X)$, 其作用为$\phi \mapsto \int \phi f$, 若$f_1\stackrel{\text{\makebox[0pt]{\tiny a.e}}}{=}f_2$, 则其对应的分布$\dtbs(f_1)=\dtbs(f_2)$, 反之由Lebesgue微分定理显然成立; 因此$\Lloc^1(X)$到$\Cc(X)^*$有一个自然的嵌入.
+    \item 在$X$上的Radon复测度刚好对应一个分布(Risez表示定理);
+    \item $\delta $分布, 某种意义上起identity的作用, 此处定义$\delta _x$是$x$处的脉冲;
+    \item 赋值或者求导: $\partial^\bullet$.
+\end{itemize}
+为了少些括号用$\<{F,\phi}$来表示分布$F$在$\phi $上的作用.
+
+\paragraph{分布与identity}
+在弱\/$^*$拓扑下很多分布的极限都是$\delta $:
+\begin{prop}
+    令$f\in\symscr L^1(\mathbb R^n)$, 则$\dtbs(f(x/t)/t^n)\xrightarrow{t\to 0} \delta \int f$.
+\end{prop}
+\begin{proof}
+    记$f(x/t)/t^n$为$f_t(x)$, 则
+    \[\int f_t\phi = \phi *f_t^\sim - \<{\delta, \phi  }\int f=\int f^\sim (y)(\phi (x-ty)-\phi(x))\d y.\]
+    其中$^\sim:f\mapsto f\circ(-1)$, 由$\phi$一致连续和紧支即得.
+\end{proof}
+\begin{remark}
+    其中这样的$f_t$可以称为一种在 $\Cc(X)$ 上的单位逼近. 在一些关于极大函数的讨论后可以证得若$f_t$满足径向衰减且恒正, 其对$\symscr L^{[1,\infty)}$亦成立.
+\end{remark}
+\paragraph{分布的函数}
+现考虑一般函数在分布上的推广, 一个浅显的例子是矩阵和其转置: 令$V$是有限维复线性空间, 线性变换在某族基下面表示为$\boldsymbol{A}$, 则其可诱导其线性函数上的线性变换, 即$\boldsymbol{A}$的拉回, 在对偶基下恰好是$\boldsymbol{A}^\top$. 即:
+\[\boldsymbol{A}^\top : f \mapsto (x\mapsto f (\boldsymbol{A}x)).\]
+置入$\Cc(X)$中可写为$\<{ \boldsymbol{A}^\top f, \phi }\coloneqq \<{ f, \boldsymbol{A}\phi }$.
+
+若欲推广一般函数的处理$T$, 考虑到$\dtbs(\Lloc^1(X))\subset\Cc(X)^*$, 则应有$\dtbs(Tf)=T\dtbs(f)$, $f\in\Lloc^1(X)$, 也即与一般函数相容.
+
+\begin{itemize}
+    \item 微分. 考虑一般良好函数的情形, $\dtbs(\partial^\bullet f)=\partial^\bullet\dtbs(f)$. 即
+          \[\<{\partial^\bullet\dtbs(f),\phi  } =\<{\dtbs(\partial^\bullet f),\phi  } =\int(\partial^\bullet f)\phi.\]
+          累次用分布积分可以得到$\int(\partial^\bullet f)\phi=(-1)^\bullet\int f (\partial^\bullet\phi)$. 故
+          \[\<{\partial^\bullet\dtbs(f),\phi  }\coloneqq (-1)^\bullet\<{\dtbs(f),\partial^\bullet\phi  },\quad \<{\partial^\bullet F,\phi  } =(-1)^\bullet \<{F, \partial^\bullet \phi  }.\]
+    \item 平移与缩放. 考虑平移算子$\tau _y \phi (x) = \phi (x-y)$. 由于平移会改变函数的支集, 不妨令$\tau _y:\Cc(x)\to \Cc(X+y)$. 现考虑其在分布上的推广:
+          \[\tau _y\dtbs(f)=\dtbs(\tau _y f).\]
+          其中后者的作用是$\phi \mapsto \int (\tau _y f)\phi = \int f(x-y)\phi(x) \d x=\int f(x)\phi(x+y) \d x$. 因此定义
+          \[\<{\tau _y\dtbs(f), \phi }\coloneqq \<{\dtbs(f), \tau _{y}\phi},\quad
+              \<{\tau _yF, \phi }\coloneqq \<{F, \tau _{y}\phi}.\]
+          其中$\tau _y\dtbs(f)$定义在$\Cc(X+y)^*$上.
+
+          缩放则考虑微分同胚$T$, 则$T$在一般函数上的作用是$f\mapsto f\circ T$. 因此定义$T:\Cc(X)\to \Cc(T^{-1} (X))$, 满足
+          \[\<{\dtbs(f)\circ T,\phi  } =\<{\dtbs(f\circ T),\phi  } =\int_X (f\circ T) \phi=\int_{T(X)}   \frac{(\phi \circ T^{-1})f}{|\!\det T|}.\]
+          即$\<{F\circ T,\phi  } = \<{F, (\phi \circ T^{-1})/|\!\det T|}$.
+    \item 与函数的乘积. 自然考虑$\<{g\dtbs(f),\phi  } =\<{\dtbs(g f),\phi  } = \int gf \phi = \<{\dtbs(f), g\phi}$.
+    \item 和$\Cc(X)$的卷积.
+          \[\<{\dtbs(f) * g,\phi  } = \<{\dtbs(f * g),\phi  } = \int (f * g)\phi=\int (g*\phi^\sim)f.\]
+          故定义$\<{F * g, \phi  } = \<{F,  g* \phi^\sim}$.
+
+          考虑到此处分布与$\Cc(X)$的卷积后仍是分布, 这可能是一个比较麻烦的点. 一个形式上的处理是用$\delta _x$固定住其在$x$处的值:
+          \[(F * g)(x) \coloneqq  \<{F * g, \delta_x  } = \<{F,  \delta_x*  g^\sim}.\]
+          其中$(\delta_x*  g^\sim)(z) = \int \delta(y-x) g(y-z)\d y =  g(x-z)=\tau_{x}  g^\sim(z)$. 故
+          \[(F * g)(x) = \<{F,  \tau_{x} \phi^\sim}.\]
+    \item Fourier变换和逆变换. 同上讨论定义为$\<{F^\wedge, \phi} = \<{F, \phi^\wedge}$. 此处可将$\Cc(X)$换成速降函数空间$\symscr S$.
+\end{itemize}
+
+\begin{prop}\label{卷积是合理的}
+    一般函数上卷积和其他运算有某些交换性质推广到分布后亦然成立.
+    \begin{itemize}
+        \item 分布和$\Cc(X)$的卷积$F * \phi $将其看成是一个函数, 则其属于$C^\infty(X+\supp \phi )$;
+        \item 考虑一般情形下求导和卷积的对换原则, 分布时亦然: $\partial^\bullet(F*\phi )=F* (\partial^\bullet\phi) =(\partial^\bullet F)*\phi $;
+        \item 上述用$\delta _x$固定$x$是合理的, 也就是$\dtbs(F * g) =F * g$. 此处用$\dtbs(F * g)$简记$\dtbs\bigl(x\mapsto \bigl<F,  \tau_{x}  g^\sim\bigr>\bigr)$.
+    \end{itemize}
+\end{prop}
+\begin{proof}
+    \begin{itemize}
+        \item 只证明一次微分情形, 设$\Delta$是差分算子.
+              \[\Delta (F * \phi) = \<{F,  \Delta(\tau_{x} \phi^\sim) }\to \<{F,  \tau_{x}\partial  \phi } = \<{F,  \tau_{x}  {(\partial\phi)}^\sim }.\]
+              故$\partial(F * \phi)=F*\partial\phi$, 归纳即得第一款和第二款.
+        \item 只需证明 $\<{\dtbs(F * g), \phi  } = \<{F * g, \phi  }$.
+
+              由支集紧致且$\phi $在其上连续, 故可用Riemann和逼近. 由$(g*  \phi^\sim) (x) = \int g (y) \phi (y-x)\d y = \int g(y)\tau _{y}  \phi^\sim(x)\d y $. 则令$y_\bullet$为对应的取值集, 有
+              \[\frac{1}{N}\sum g(y_\bullet)\tau _{y_\bullet}  \phi^\sim\rightrightarrows (g*  \phi^\sim) (x).\]
+              且其导函数$\partial^\bullet (\sum g(y_\bullet)\tau _{y_\bullet}  \phi )/N \rightrightarrows \partial^\bullet(g*  \phi^\sim)$(由于高阶导数有界), 故该逼近在$\Cc(X)$拓扑中趋向于$g*  \phi^\sim$. 故
+              \[\begin{aligned}
+                      \<{F, g*  \phi^\sim}
+                       & = \lim \frac{1}{N}\sum g(y_\bullet)\<{F,\tau _{y_\bullet}  \phi^\sim} \\
+                       & =\int \sum g(y)\<{F,\tau _{y}  \phi^\sim}\d y                         \\
+                       & =\int (F*\phi )g = \<{\dtbs(F * g), \phi  }. \qedhere                 \\
+                  \end{aligned}\]
+    \end{itemize}
+\end{proof}
+由于分布的奇异性, 我们想要用合理的函数逼近之, 下面给出了可行性:
+\begin{prop}
+    $\overline{\dtbs(\Cc(X))}=\Cc(X)^*$.
+\end{prop}
+\begin{proof}
+    证明分为以下几步：
+    \begin{enumerate}[label = {\scshape Step~\Roman*.}]
+        \item 用紧支分布逼近. 用上升紧集列$\{K_\bullet\}$逼近$X$, 且$K_{\bullet -1}\subset K_\bullet^\circ$. 令$g_\bullet\in\Cc(X)$满足$g_\bullet|_{K_\bullet}=1$, $g_\bullet |_{K_{\bullet+1}^\complement}=0$. 则$g_\bullet \phi \to \phi $, 故
+              \[\<{\dtbs(g_\bullet) F,  \phi } =\<{F, g_\bullet \phi  } \to \<{F,\phi  }\implies \dtbs(g_\bullet) F\to F.\]
+        \item 用单位逼近卷积逼近紧支分布. 令$ h _t(x)= h (x/t) /t^n$, $\int h=1$. 则$  h _t^\sim*\phi \to \phi $. 考虑$\dtbs(g_\bullet) F*h_t$:
+              \[
+                  \begin{aligned}
+                      \<{\dtbs(g_\bullet) F*h_t, \phi  }
+                       & = \<{\dtbs(g_\bullet) F, \phi * h _t^\sim}\to \<{\dtbs(g_\bullet) F, \phi} \\
+                       & \Longrightarrow \dtbs(g_\bullet) F*h_t\to \dtbs(g_\bullet) F.
+                  \end{aligned}\]
+        \item 证明$\dtbs(g_m)F*h_{1/n}$有紧支子列. 固定$m$, 现处理$\<{F, g_m\tau _{x}  {h_{1/n}} }$, 只需考虑$\supp g_m\cap (x+\supp  h_{1/n}^\sim)$和注意勿让$x+\supp  h_{1/n}^\sim$与$X^\complement$相交即可. 令
+              \[n(m)=\min\set[\bigg][~]{n\given \sup_{\supp h_{1/n}}|\cdot | < \frac{1}{2}\operatorname{dist}(\supp g_m, X^\complement)}.\]
+              则$\Cc(x)\ni\dtbs(g_\bullet) F*h_{1/n(\bullet)}\to F$.\qedhere
+    \end{enumerate}
+\end{proof}
+
+\paragraph{缓增分布$\symscr S^*$}
+比较重要的是其Fourier变换:
+\[\<{F^\land, \phi}\coloneqq \<{F, \phi^\land},\quad \<{F^\lor,\phi}\coloneqq \<{F,\phi^\lor}.\]
+故$\land\circ\lor=\lor\circ\land = \operatorname{id}_{\symscr S^*}$.
+
+以下公式由速降函数的性质可以直接运算得到:
+\[
+    \begin{aligned}
+         & (\tau _y F)^\land         = \mathrm e^{-2\pi \mathrm{i}(\cdot)y}F^\land,   &  & (\mathrm e^{2\pi \mathrm{i}(\cdot )y}F)^\land = \tau _y F^\land,                  \\
+         & \partial^\bullet F^\land  = ((-2 \pi\mathrm{i} (\cdot ))^\bullet F)^\land, &  & (\partial^\bullet F)^\land                    = (2\pi\mathrm{i} (\cdot ))F^\land, \\
+         & (F\circ T)^\land          = |\!\det T|(F^\land \circ T^{-1\top} ),\quad    &  & (F* \phi )^\land                          = \dtbs(\phi^\land) F^\land.
+    \end{aligned}
+\]
+\begin{prop}\label{Fourier是合理的}
+    形式上地, $F^\land(x) = \<{F, \delta _x^\land}$, 也就是$F^\land(x)=\<{F,\mathrm{e} ^{2\pi\mathrm{i} x(\cdot )}}$. 为了保证后者有意义, 令$F$紧支.
+\end{prop}
+\begin{proof}
+    只需证明$\forall \phi\in\symscr \Cc(\mathbb R^n)$, $\int\<{F,\mathrm{e} ^{2\pi\mathrm{i}(\cdot )x}}\phi(x)\d x = \<{F, \phi ^\land}$. 同\autoref{卷积是合理的}中处理一致, 用Riemann和逼近:
+    \[\begin{aligned}
+            \<{F, \phi ^\land} & \leftarrow\sum\<{F,\mathrm{e} ^{2\pi\mathrm{i}x_\bullet(\cdot )}\phi(x_\bullet)\Delta x_\bullet}                                                                  \\
+                               & =\sum\<{F,\mathrm{e} ^{2\pi\mathrm{i}x_\bullet(\cdot )}}\phi(x_\bullet) \Delta x_\bullet \to \int\<{F,\mathrm{e} ^{2\pi\mathrm{i}(\cdot )x}}\phi(x)\d x. \qedhere \\
+        \end{aligned}\]
+\end{proof}
+\section{Hilbert变换}
+Hilbert变换定义为
+\[H:\symscr S(\mathbb R)\to \symscr L^2,\quad f\mapsto \biggl[x \mapsto \pv\int \frac{f(x-y)\d y}{\pi y}\biggr] = f* \frac{\pv}{ (\cdot)\pi }.\]
+直接的估计可以得到$xHf(x)\to \int f$. 故其属于$\symscr L^2$.
+
+同\autoref{Fourier是合理的}中讨论$\<{\pv /((\cdot )\pi ),\mathrm{e} ^{2\pi\mathrm{i} x(\cdot )}}=-\mathrm{i}\operatorname{sgn}x$.
+
+故由Plancherel定理得到$H$是强$(2,2)$的, 由Fourier变换唯一性得到$H^2=-\operatorname{id}_{\symscr L^2}$. 同时:
+\[(Hf)g=g^\lor * (Hf)^\lor =\mathrm{i} (f^\lor\cdot \operatorname{sgn})*g.\]
+故$\int (Hf)g=-\int (Hg)f$.
+
+\begin{theorem}[Kolmogorov]
+    $H$是弱$(1,1)$的.
+\end{theorem}
+\begin{proof}
+    不妨假设$f$非负, 其余情形由线性组合得到. 证明的步骤是利用\CZ 分解: 固定$\lambda $, 则存在不交区间列$I_\bullet$满足
+    \[\begin{aligned}
+             & f\leqslant \lambda ,\quad\forall x \stackrel{\text{a.e}}{\in}\Bigl(\bigcup I_\bullet\Bigr)^\complement\eqqcolon \Omega ^\complement, \\
+             & |\Omega |\coloneqq m(\Omega )\leqslant \frac{\|f\|_1}{\lambda },                                                                     \\
+             & \fint_{I_\bullet}f\in(\lambda ,2\lambda ].
+        \end{aligned}\]
+    令$g = f \mathbf 1_{\Omega ^\complement}+\sum \mathbf 1_{I_\bullet}\fint_{I_\bullet}f$, $b=\sum \mathbf 1_{I_\bullet}(f-\fint_{I_\bullet}f)=\sum b_\bullet$. 即好与坏的部分. 则
+    \[g\stackrel{\text{a.e}}{\leqslant }2\lambda ,\quad\int b_\bullet = 0,\quad\supp b_\bullet\subset I_\bullet.  \]
+    令$a^{K}_{?}(f)=|\set{x\in K\given ?(|f|)}|$, $K$为全空间时省略. 则只需证明$a_{>\lambda }(Hf)\lesssim^f \|f_1\|_1 / \lambda $即可, 其中
+    \[a\lesssim b \coloneqq \sup_{a\neq 0}(b / a)<\infty.\]
+    上标$f$强调常数和$f$无关.
+
+    由$a_{>\lambda}(Hf)\leqslant a_{>\lambda /2}(Hg) + a_{>\lambda /2}(Hb)$, 只需令$a_{>\lambda /2}(Hg)$, $a_{>\lambda /2}(Hb)\lesssim^f \|f_1\|_1 / \lambda$即可.
+    \begin{itemize}
+        \item 易见$g\in\symscr L^2$, 故$Hg$亦然, 有
+              \[a_{>\lambda /2}(Hg)\leqslant \frac{4}{\lambda ^2}\|Hg\|_2^2=\frac{4}{\lambda ^2}\|g\|_2^2\leqslant \frac{8}{\lambda }\|g\|_1=\frac{8}{\lambda }\|f\|_1.\]
+        \item 对$b$采用扩大区间的估计. 令$2I_\bullet$定义为中心为原中心, 长度变为两倍的区间, $2\Omega $定义为$\bigcup 2I_\bullet$.
+
+              则$|2\Omega |\leqslant 2|\Omega |$且:
+              \[a_{>\lambda /2}(Hb)\leqslant |2\Omega |+a^{2\Omega ^\complement}_{>\lambda /2}(Hb)\leqslant \frac{2\|f_1\|_1}{\lambda } + \frac{2}{\lambda }\int_{2\Omega ^\complement}|Hb|.\]
+              考虑$f\in\symscr S$, 故$b\in\symscr L^2$, $\sum_{\text{finite}}b_\bullet\to b$, 故$H(\sum_{\text{finite}}b_\bullet)=\sum_{\text{finite}}Hb_\bullet\to Hb$, 由$H$强$\symscr L^2$有界即得. 故
+              \[|Hb|\leftarrow \biggl|H\biggl(\,\sum_{\text{finite}}b_\bullet\biggr)\biggr|\leqslant \sum_{\text{finite}}|Hb_\bullet|\to \sum|Hb_\bullet|.\]
+              而考虑到$b_\bullet$只是速降函数减去某个常数在区间上的限制, 故
+              \[Hb_\bullet=\pv\int_{I_\bullet} \frac{b_\bullet(y)}{x-y}\d y\]
+              存在. 令$c_\bullet$是$I_\bullet$中心, 则
+              \[
+                  \begin{aligned}
+                      \int_{2\Omega ^\complement}|Hb|
+                       & \leqslant \sum\int_{2I_\bullet^\complement}|Hb_\bullet| \leqslant \sum\int_{2I_\bullet^\complement}\biggl|\pv\int_{I_\bullet} \frac{b_\bullet(y)}{x-y}\d y\biggr|\d x \\
+                       & \leqslant \sum\int_{I_\bullet}|b_\bullet(y)|\biggl(\pv\int_{2I_\bullet^\complement} \biggl|\frac{1}{x-y}-\frac{1}{x-c_\bullet}\biggr|\d x\biggr)\d y                  \\
+                       & =         \sum\int_{I_\bullet}|b_\bullet(y)|\biggl(\pv\int_{2I_\bullet^\complement} \frac{|y-c_\bullet|}{|x-y||x-c_\bullet|}\d x\biggr)\d y                           \\
+                       & \leqslant \sum\int_{I_\bullet}|b_\bullet(y)|\biggl(\pv\int_{2I_\bullet^\complement} \frac{|I_\bullet|}{|x-c_\bullet|^2}\d x\biggr)\d y                                \\
+                       & \lesssim^f \sum\|b_\bullet\|_1\lesssim^f \|f\|_1.
+                  \end{aligned}
+              \]
+              故$a_{>\lambda /2}(Hb)\lesssim^f \|f\|_1 /\lambda $. 证毕. \qedhere
+    \end{itemize}
+\end{proof}
+\begin{remark}
+    由Hilbert变换的弱$(1,1)$性, 令$\symscr S\ni f_\bullet\to f\in\symscr L^1$, 则
+    \[a_{>\lambda }(f_m-f_n)\lesssim \|f_m-f_n\|_1\to 0.\]
+    能诱导依测度Cauthy列, 故有一个可测函数极限, 但非$\symscr L^1$.
+
+    Hilbert变换的$\symscr L^1$常数是$\pi ^2/8\sum_{n\geqslant 0}(-1)^n / (2n+1)^2$.
+\end{remark}
+\begin{theorem}[Riesz]\label{Riesz定理}
+    $H$是强$(p,p)$的, 其中$p\in(1,\infty)$.
+\end{theorem}
+\begin{proof}
+    证明是极其经典的. 用Marcinkiewicz插值定理得到$p\in(1,2]$的情形, $p>1$的情形用$\symscr L^p$的对偶过渡:
+    \[\begin{aligned}
+            \|Hf\|_p & =\sup\set[\bigg]{\biggl|\int (Hf)g\biggr|\given \|g\|_{p'}\leqslant 1}                  \\
+                     & =\sup\set[\bigg]{\biggl|\int (Hg)f\biggr|\given \|g\|_{p'}\leqslant 1}                  \\
+                     & \leqslant \|f_p\|\sup\set{\|Hg\|_{p'}\given \|g\|\leqslant 1}\lesssim^f\|f\|_p.\qedhere
+        \end{aligned}\]
+\end{proof}
+\begin{theorem}[截断Hilbert变换]
+    令$H_\varepsilon f(x)= \int_{|y|>\varepsilon}f(x-y) / \pi y\d y$. 则$\forall f\in\symscr{L} ^{[1,\infty)}$, $Hf\stackrel{\text{a.e}}{=}\lim H_\varepsilon f$. 同时亦有$\lim\|H_\varepsilon f-Hf\|_p=0$.
+\end{theorem}
+\begin{proof}
+    先证明$\lim\|H_\varepsilon f-Hf\|_p=0$. 由$(\mathbf 1_{\set{y\given |y| >\varepsilon}})^\land =-2\mathrm{i} \operatorname{sgn}\int_{2\pi \varepsilon|\cdot |}^\infty \operatorname{sinc}$有界, 故强$(2,2)$, 同\autoref{Riesz定理}讨论知其强$(p,p)$. 故
+    \[\|Hf-H_\varepsilon f\|\leqslant
+        \|Hf-Hf_n\|
+        +\|Hf_n-H_\varepsilon f_n\|
+        +\|H_\varepsilon f_n-H_\varepsilon f\|.\]
+    $\symscr S\ni f_n\to f$. 则中间者用$f_n\in\symscr S$得到, 其他由强$(p,p)$控制得到.
+
+    欲证明$Hf\stackrel{\text{a.e}}{=}\lim H_\varepsilon f$, 由$\symscr L^p$收敛知存在几乎处处收敛子序列, 只需证明序列几乎处处收敛即可, 由$\symscr S$上的情形显然, 故只需证明
+    \[H^*f\coloneqq \sup_{\varepsilon>0}|H_\varepsilon f|.\]
+    是弱$(p,p)$的即可. 证明需要用到Cotlar不等式:
+    \begin{lemma}[Cotlar]\label{Cotlar}
+        若$f\in\symscr S$, 则$H^*f\lesssim MHf + Mf$.
+    \end{lemma}
+    \begin{proof}[Proof of Cotlar inequality]
+        只需证明$H_\varepsilon f\lesssim^\varepsilon MHf + Mf$即可.
+    \end{proof}
+\end{proof}
+
+\section{\CZ 奇异积分}
+
+先主要考虑同展缩可交换的卷积型算子, 令$\tau ^a:f\mapsto f\circ a$. 即考虑
+\[T \tau ^a = \tau ^a T\]
+的$T$, 其中$Tf=K*f$. 计算得到$K$要满足齐次条件:
+\[K(\lambda x)\lambda^n = K(x).\]
+故考虑形似
+\[Tf(x) = \pv\int \frac{\Omega (y/|y|)}{|y|^n}f(x-y)\d y.\]
+的$T$.
+
+\begin{prop}
+    即使考虑$\symscr S$上的函数, 为使上式存在, 须有$\int_{\mathbb S^{n-1}}\Omega \d \sigma =0$, $\sigma $为$\mathbb S^{n-1}$上的曲面测度.
+\end{prop}
+\begin{proof}
+    令$f$在$B(0,2)$内值为$1$, 则
+    \[Tf(x)=\int_{|y|>1}\frac{\Omega (y/|y|)}{|y|^n}f(x-y)\d y+\lim_{\varepsilon \to 0} \int_{\varepsilon<|y|\leqslant 1} \frac{\Omega (y /|y|)}{|y|^n}\d y.\]
+    前者易见收敛, 而后者值为
+    \[-\lim_{\varepsilon \to 0} \int_{\mathbb S^{n-1}}\Omega \d \sigma \cdot \log \varepsilon.\]
+    故须有$\int_{\mathbb S^{n-1}}\Omega \d \sigma=0$.
+\end{proof}
+由于$\mathbb S^{n-1}$测度有限, 故先考虑最广的情形:
+\begin{theorem}
+    令$x'=x / |x|$, 若$\Omega \in\symscr L^{(1,\infty)}(\mathbb S^{n-1})$, $\int_{\mathbb S^{n-1}}\Omega \d \sigma=0$, 则$(\Omega(-')/|-|^n)^\land$是$0$次的, 由于$\Omega(-')/|-|^n*\mathrm{e} ^{2\pi\mathrm{i}  x(\cdot )}$有意义, 故其Fourier变换是一个函数:
+    \[m(x)=-\int_{\mathbb S^{n-1}}\Omega (u)\biggl(\log |ux'|+ \frac{\pi\mathrm{i} }{2}\operatorname{sgn}(ux')\biggr)\d \sigma (u).\]
+\end{theorem}
+\begin{proof}
+    其是$0$次的由Fourier变换与次数的关系直接得到. 现计算其Fourier变换:
+    \[
+        \begin{aligned}
+            m(x) & =\lim_{\varepsilon\to 0}\int_{\varepsilon< |y|<1 / \varepsilon} \frac{\Omega (y')}{|y|^n}\mathrm{e} ^{-2\pi\mathrm{i} xy}\d y                                                                                                         \\
+                 & =\lim_{\varepsilon\to 0}\left( \int_{\varepsilon< |y|<1} \frac{\Omega (y')}{|y|^n}\mathrm{e} ^{-2\pi\mathrm{i} xy}\d y +
+            \int_{1< |y|<1 / \varepsilon} \frac{\Omega (y')}{|y|^n}\mathrm{e} ^{-2\pi\mathrm{i} xy}\d y \right)                                                                                                                                          \\
+                 & = \lim_{\varepsilon\to 0}\int_{\mathbb S^{n-1}} \Omega (u)\left( \int_\varepsilon^1 \frac{\mathrm{e} ^{-2\pi\mathrm{i} rux}-1}{r}\d r + \int_1^{1 /\varepsilon} \frac{\mathrm{e} ^{-2\pi\mathrm{i} rux}\d r}{r} \right)\d \sigma (u).
+        \end{aligned}
+    \]
+    考虑$\Re\circ m(x)$和$\Im\circ m(x)$:
+    \[\begin{aligned}
+                              & \Re\circ m(x)                                                                                                                                                                                      \\
+            ={}               & \lim_{\varepsilon\to 0}\int_{\mathbb S^{n-1}} \left( \int_\varepsilon^1 \frac{\cos (2 \pi rux) -1}{r}\d r + \int_1^{1 /\varepsilon} \frac{\cos (2 \pi rux)\d r}{r} \right)\Omega (u)\d \sigma (u), \\
+            \Im\circ m(x) ={} & -\lim_{\varepsilon\to 0}\int_{\mathbb S^{n-1}} \Omega (u)\left( \int_\varepsilon^{1 / \varepsilon} \frac{\sin (2\pi rux)}{r}\d r \right)\d \sigma (u).
+        \end{aligned}\]
+    由于$|\int_\varepsilon^{1 / \varepsilon} \sin (2\pi rux) /r\d r|\leqslant \pi /2$. 故由控制收敛定理得\[\Im\circ m(x)=-\frac{\pi\operatorname{sgn}(ux)}{2}\int_{\mathbb S^{n-1} }\Omega .\]
+    至于$\Re\circ m(x)$, 由
+    \[
+        \begin{aligned}
+                & \int_\varepsilon^1 \frac{\cos (2 \pi rux) -1}{r}\d r + \int_1^{1 /\varepsilon} \frac{\cos (2 \pi rux)\d r}{r}                                  \\
+            ={} & \int_{2\pi |ux|\varepsilon}^1 \frac{\cos s-1}{s}\d s + \int_1^{2\pi |ux| /\varepsilon} \frac{\cos s\d s}{s}-\int_1^{2\pi |ux|} \frac{\d s}{s}.
+        \end{aligned}
+    \]
+    前两者有界故可分离出来用控制收敛定理, 由$\Omega $积分零而消失, 后者恰好为$-\log |ux|$.
+\end{proof}
+\begin{remark}
+    此中$m$是一个看起来非$\symscr L^\infty$的乘子, 若将$\Omega $限制为$\symscr L^{(1,\infty)}$函数, 则$m$的确有界. 同时, 若$\Omega $是奇$\symscr L^1$的, 则$\Re\circ m$经过计算为$0$, 故:
+    \[\Omega -\Omega ^\sim\in\symscr L^1,\quad \Omega +\Omega ^\sim \in \symscr L^{(1,\infty)}\implies m\text{~有界}.\]
+    更一般地, 可以推广到$\Omega +\Omega ^\sim \in \symscr L\log\symscr L(\mathbb S^{n-1})$的情形. 故其$\symscr L^2$上强有界.
+\end{remark}
+
+\subsection{奇核与旋转方法}
+
+此节认为$\Omega $是奇的.
+
+旋转方法可以将一些一维算子推广到$n$维, 同时保留一些有界性质. 给定$T$在$\symscr L^p(\mathbb R)$上强有界, $u\in\mathbb S^{n-1}$, 则令
+\[T_uf(x) = T(f(\mathoctothorpe u + \rho ^\bot(x)))(\rho (x)).\]
+其中$\rho :\mathbb R^n\to \mathbb R$, $x\mapsto \<{x, u}$, $\rho ^\bot:\mathbb R^n\to \mathbb Ru^\bot$, $x\mapsto x-\<{x, u}$.
+
+也即是$f$截面投影的$T$像. 有界性质由下式保持:
+\[\begin{aligned}
+        \|T_uf\|_p^p & =\int_{\mathbb Ru^\bot}\int_{\mathbb R}|T(f(\cdot u + \rho ^\bot(x)))(\rho (x))|^p\d \rho (x)\d x        \\
+                     & \lesssim_p \int_{\mathbb Ru^\bot}\int_{\mathbb R}|f(\cdot u + \rho ^\bot(x))(\rho (x))|^p\d \rho (x)\d x \\
+                     & \lesssim_p \|f\|_p^p.
+    \end{aligned}\]
+如Hilbert变换就可由此推广到$n$维上(方向Hilbert变换).
+\begin{prop}\label{无用的}
+    令$T:\symscr L^p(\mathbb R)\to \symscr L^p(\mathbb R)$的范数为$C_p$, 则$\forall \Omega\in\symscr L^1(\mathbb S^{n-1})$, 令
+    \[T_u[\Omega]f(x) = \int_{\mathbb S^{n-1}}\Omega (u)T_uf(x)\d \sigma (u).\]
+    是$\symscr L^p$强有界的. 范数至多为$C_p\|\Omega\|_1$.
+\end{prop}
+\begin{proof}
+    由Minkowski不等式:
+    \[\begin{aligned}
+                         & \biggl( \int_{\mathbb R^n}\biggl| \int_{\symscr S^{n-1}}\Omega (u)T_uf(x)\d \sigma (u) \biggr|^p \d x \biggr)^{1 / p} \\
+            \leqslant {} & \int_{\mathbb S^{n-1}}\biggl(\int_{\mathbb R^n} |\Omega (u)T_uf(x)|^p\d x\biggr) ^{ 1/p}\d \sigma (u)                 \\
+            \leqslant {} & \int_{\symscr S^{n-1}}|\Omega (u)|C_p\|f\|_p\d \sigma (u)=C_p\|\Omega \|_1\|f\|_p.\qedhere
+        \end{aligned}\]
+\end{proof}
+以上就是最朴素的旋转方法.
+\begin{theorem}[oddker]
+    令$\Omega \in\symscr L^1(\mathbb S^{n-1})$且奇, 则$Tf(x)=\pv\int \Omega (y/|y|)f(x-y) / |y|^n\d y$定义的算子在$\symscr L^{(1,\infty)}$中强有界. 同时该极限几乎处处收敛.
+\end{theorem}
+\begin{proof}
+    在$Tf(x)=\pv\int \Omega (y/|y|)f(x-y) / |y|^n\d y$中考虑极坐标约化, 往\autoref{无用的}中情形靠近:
+    \[Tf(x)=\lim_{\varepsilon\to 0}\int_{\mathbb S^{n-1}}\Omega (u)\int_\varepsilon^\infty \frac{f(x-ru)\d r}{r}\d \sigma (u).\]
+    在原点附近减去作为主项的$f(x)$得到:
+    \[\int_{\mathbb S^{n-1}}\Omega (u)\int_\varepsilon^1 \frac{f(x-ru)-f(x)}{r}\d r\d \sigma (u)+\int_{\mathbb S^{n-1}}\Omega (u)\int_1^\infty \frac{f(x-ru)\d r}{r}\d \sigma (u).\]
+    上定义为$I_1+I_2$, 由奇核最朴素的抵消性质:
+    \[I_1=\frac{1}{2}\int_{\mathbb S^{n-1}}\Omega (u)\int_{\varepsilon<|r|<1} \frac{f(x-ru)-f(x)}{r}\d r\d \sigma (u).\]
+    其中$\int_{\varepsilon<|r|<1} \frac{f(x-ru)-f(x)}{r}\d r$本身是有界的($f\in\symscr S$), 故由控制收敛定理得$I_1\to \frac{\pi}{2}\int_{\mathbb S^{n-1}}\Omega (u)H_u(f\mathbf 1_{\mathbb D})(x)\d \sigma (x) $. 同理$I_2=\frac{\pi}{2}\int_{\mathbb S^{n-1}}\Omega (u)H_u(f\mathbf 1_{\mathbb D^\complement})(x)\d \sigma (x)$, 因此
+    \[Tf(x)=\frac{\pi}{2}\int_{\mathbb S^{n-1}}\Omega (u)H_uf(x)\d \sigma (x) .\]
+    由Hilbert变换强$(p,p)$和\autoref{无用的}得到$T$是强$(p,p)$的.
+
+    证明其极限几乎处处存在极只需考察极大函数:
+    \[T^*f(x)=\sup_{\varepsilon>0}\left| \int_{|y|>\varepsilon} \frac{\Omega (y/|y|)}{|y|^n}f(x-y)\d y\right|.\]
+    由
+    \[\begin{aligned}
+            \int_{|y|>\varepsilon} \frac{\Omega (y/|y|)}{|y|^n}f(x-y)\d y & =\frac{\pi}{2}\int_{\mathbb S^{n-1}}\Omega (u)H_u(f\mathbf 1_{\mathbb D(\varepsilon)^\complement})(x)\d \sigma (x) \\
+                                                                          & \leqslant \frac{\pi}{2}\int_{\mathbb S^{n-1}}|\Omega (u)|(H^*)_uf(x)\d \sigma (x).                                 \\
+        \end{aligned}\]
+    而$H^*$的有界性由\autoref{Cotlar}得到, 由\autoref{无用的}即得.
+\end{proof}
+\subsection{偶核与Riesz变换}
+对于偶核, 主要采用套一个Riesz变换得到奇核的处理: 令
+\[R_\bullet f= \Gamma \biggl(\frac{ n+1}{2}\biggr)\pi ^{-(n+1)/2}\pv\pi_\bullet  (\cdot ') / |\cdot |^n*f.\]
+则由对奇核的讨论, Riesz变换是强$(p,p)$的. 且$(R_\bullet f)^\land=-\mathrm{i} \pi _\bullet (\cdot ')f^ \land$, 故$\sum  R_\bullet ^2=-\operatorname{id}$. 此对$\mathcal L^{(1,\infty)}$中亦成立.
+
+令$f\in\mathcal \Cc$, 则
+\[-\sum  R_\bullet ^2Tf=Tf.\]
+若$R_\bullet Tf$为一奇核卷积形式, 则可由Riesz变换的强有界性得到偶核卷积的强有界性.
+
+考虑其Fourier的有界性, 不妨令$\Omega \in \mathcal L^{(1,\infty)}$, $K(x)=\Omega (x') / |x|^n$, $K_\varepsilon(x)=\Omega (x') / |x|^n\mathbb 1_{\set{x\given |x|>\varepsilon}}$.
+
+令$\Omega \in\mathcal L^q$, $q>1$, 则$K_\varepsilon\in\mathcal L^{(1,q)}$, 故其局部可积, 考虑$f\in\Cc$, 则
+\[(R_\bullet(K_\varepsilon*f))^\land= -\mathrm{i} \pi _\bullet(\cdot ')(K_\varepsilon*f)^\land=-\mathrm{i} \pi _\bullet(\cdot ')K_\varepsilon^\land f^\land=(R_\bullet K_\varepsilon)^\land f^\land=((R_\bullet K_\varepsilon)*f)^\land.\]
+可认为是在$\mathcal L^p$, $1<p<\min(q,2)$中间进行Fourier操作, 由Fourier变换唯一性(和连续性)得到
+\[R_\bullet(K_\varepsilon*f)=(R_\bullet K_\varepsilon)*f.\]
+故先寻找满足要求的奇核$\Omega (\cdot ') / |\cdot |^n\stackrel{\text{a.e.}}{=}\lim_{\varepsilon \to 0} R_\bullet K_\varepsilon$.
+\begin{lemma}
+    $\exists P_\bullet(x)$, $-n$齐次, 奇, 且
+    \[\lim_{\varepsilon \to 0} R_\bullet K_\varepsilon = P_\bullet.\]
+    几乎处处成立, 且在$\mathbb R^n\setminus\{0\}$中是内闭几乎处处一致收敛的.
+\end{lemma}
+\begin{proof}
+    由$R_\bullet(K_\varepsilon*f)=(R_\bullet K_\varepsilon)*f$, 而$K_\varepsilon*f\in\mathcal L^{(1,q)}$, 故由\autoref{oddker}知积分几乎处处存在.
+
+    令$\varepsilon_1$, $\varepsilon_2$极小, 不妨令其小于$|x| / 2$以防止$x=y$, 则
+    \[R_\bullet(K_{\varepsilon_1}-K_{\varepsilon_2})(x)\approx \pv\int_{\mathbb R^n} \frac{\pi _\bullet(x-y)}{|x-y|^{n+1}}(K_{\varepsilon_1}-K_{\varepsilon_2})(x)\d y\approx\int_{\varepsilon_1<|y|<\varepsilon_2}\frac{\pi _\bullet(x-y) \Omega (y')}{|x-y|^{n+1}|y|^n}\d y.\]
+    同理减去关于$x$的主项:
+    \[R_\bullet(K_{\varepsilon_1}-K_{\varepsilon_2})(x)\approx\int_{\varepsilon_1<|y|<\varepsilon_2}\left( \frac{\pi _\bullet(x-y) }{|x-y|^{n+1}} - \frac{\pi _\bullet(x) }{|x|^{n+1}}  \right) \frac{\Omega (y')}{|y|^n}\d y.\]
+    由中值定理
+    \[\left| \frac{\pi _\bullet(x-y) }{|x-y|^{n+1}} - \frac{\pi _\bullet(x) }{|x|^{n+1}}   \right|\leqslant \sup_{B(x,|x-y|)} \left| \left( \frac{\pi _\bullet}{|\cdot |^{n+1}} \right) ' \right| |y|. \]
+    而计算得到
+    \[\left| \left( \frac{\pi _\bullet}{|\cdot |^{n+1}} \right) ' \right|(x)= \frac{\sqrt{(n^2-1) x_\bullet^2+|x|^2}}{|x|^{n+2}}\lesssim \frac{1}{|x|^{n+1}} \]
+    故\[|R_\bullet(K_{\varepsilon_1}-K_{\varepsilon_2})(x)|\lesssim \frac{1}{|x|^{n+1}}\int_{\varepsilon_1<|y|<\varepsilon_2} \frac{|\Omega (y')|}{|y|^{n-1}}\d y\lesssim \frac{\varepsilon_2\|\Omega\|_1}{|x|^{n+1}} .\]
+    故$\forall x$, $R_\bullet K_\varepsilon$是Cauthy列, 且在$\mathbb R^n\setminus\{0\}$上内闭一致, 故令$\lim_{\varepsilon \to 0} R_\bullet K_\varepsilon$几乎处处存在. 令$x\in E$上述极限存在, 则令$L_\bullet = \mathbb 1_{E\cap -E}\lim_{\varepsilon \to 0} R_\bullet K_\varepsilon$, 则$L_\bullet$奇, 只需证明其几乎处处$-n$齐次.
+
+    由于$R_\bullet$对应的核是$-n$齐次的, 故
+    \[R_\bullet K_\varepsilon =\lambda ^{-n}R_\bullet K_{\varepsilon / \lambda }\implies  L_\bullet(\lambda x)= \lambda ^{-n}L_\bullet(x).\]
+    在$E / \lambda \cap E$上成立. 但是$\cap_{\lambda >0}E / \lambda$不一定几乎处处. 故考虑固定$\mathcal L_\bullet$在某球面上的值, 依靠延拓达到$\mathbb R^n$上的$-n$齐次函数, 此时只需上式在某球面上几乎处处成立即可.
+
+    令$D=\set{(x,\lambda )\in\mathbb R^n \times (0,\infty)\given L_\bullet(\lambda x)\neq  \lambda ^{-n}L_\bullet(x) }$, 则
+    \[m^{n+1}(D)=\int_0^\infty m^n(\set{x\given L_\bullet(\lambda x)\neq  \lambda ^{-n}L_\bullet(x)})\d \lambda =0.\]
+    极坐标换元可得
+    \[\int_0^\infty \int_{\mathbb S^{n-1}(r)}\int_0^\infty\mathbb 1_{\set{x\given L_\bullet(\lambda ru)\neq  \lambda ^{-n}L_\bullet(ru)}}r^{n-1}\d \lambda\d \sigma(u) \d r=0.\]
+    故存在$\rho $, $\int_{\mathbb S^{n-1}(r)}\int_0^\infty\mathbb 1_{\set{x\given L_\bullet(\lambda ru)\neq  \lambda ^{-n}L_\bullet(ru)}}r^{n-1}\d \lambda\d \sigma(u)=0$. 即$\sigma (\set{x\given L_\bullet(\lambda x)\neq  \lambda ^{-n}L_\bullet(x),|x|=\rho  })=0$. 故考虑
+    \[P_\bullet(x)=\mathbb 1_{\set{x\given x\neq 0,\,L_\bullet(\lambda \rho  x')=  \lambda ^{-n}L_\bullet(\rho x')}}\left( \frac{\rho }{x} \right) ^n L_\bullet(\rho x').\]
+    也即是将$L_\bullet|_{\mathbb S^{n-1}(\rho )}$的部分齐次延拓出去, 易见
+    \[m(P_\bullet \neq L_\bullet)\subset E\cup\set{x\given L_\bullet(\lambda \rho  x')\neq  \lambda ^{-n}L_\bullet(\rho x')}=\{0\}.\]
+    故两者几乎处处相等.
+\end{proof}
+$R_\bullet(K_\varepsilon*f)$已经解决, 我们现仍需处理$P_\bullet$本身, 如其是否$\mathcal L^1(\mathbb S^{n-1})$等等.
+\begin{lemma}
+    $\|P_\bullet|_{\mathbb S^{n-1}}\|_1\lesssim \|\Omega \|_q$, $\|R_\bullet K_\varepsilon - P_\bullet \mathbb 1_{\set{x\given |x|>\varepsilon}}\|_1\lesssim \|\Omega \|_q$.
+\end{lemma}
+\begin{proof}
+    $P_\bullet$在$\mathbb S^{n-1}$上的积分可以通过极坐标变换回到$\mathbb R^n$中来:
+    \[\int_{\mathbb S^{n-1}}|P_\bullet|\d \sigma \approx \int_{1<|x|<2}|P_\bullet|\d m.\]
+    故$\int_{1<|x|<2}|P_\bullet|\d m \leqslant \int_{1<|x|<2}|P_\bullet-R_\bullet K_{1 /2}|\d m+\int_{1<|x|<2}|R_\bullet K_{1 /2}|\d m\eqqcolon I_1+I_2$.
+    由于$|R_\bullet(K_{\varepsilon_1}-K_{\varepsilon_2})(x)|\lesssim{\varepsilon_2\|\Omega\|_1} / {|x|^{n+1}}$得到
+    \[|(P_\bullet-R_\bullet K_{\varepsilon_2})(x)|\lesssim\frac{\varepsilon_2\|\Omega\|_1}{|x|^{n+1}}\]
+    (几乎处处成立)故$I_1\lesssim\|\Omega \|_1$. 而$I_2$:
+    \[I_2\lesssim \|R_\bullet K_{1 /2}\|_q\lesssim \|K_{1 /2}\|_q\approx \|\Omega \|_q.\]
+    故$\|P_\bullet|_{\mathbb S^{n-1}}\|_1\lesssim\|\Omega \|_q$.
+
+    第二个不等式由于$\|R_\bullet K_\varepsilon - P_\bullet \mathbb 1_{\set{x\given |x|>\varepsilon}}\|_1=\|R_\bullet K_1 - P_\bullet \mathbb 1_{\set{x\given |x|>1}}\|_1$, 只需证明后者.
+    \[\int\bigl|R_\bullet K_1 - P_\bullet \mathbb 1_{\set{x\given |x|>1}}\bigr|\leqslant \int_{|\cdot |<2}|R_\bullet K_1|+\int_{1<|\cdot |<2}|P_\bullet|+\int_{|\cdot |>2}\bigl|R_\bullet K_1 - P_\bullet \bigr|.\]
+    前者由$R_\bullet$强$(p,p)$和$\|K_1\|_q\lesssim \|\Omega \|_q$得到, 中间者已在第一个不等式中证实, 后者$\lesssim \|\Omega\|_1\int_{|\cdot |>2} 1 /|x|^{n+1}\d x$.
+\end{proof}
+回忆一下得到的三条公式:
+\[\lim_{\varepsilon \to 0} R_\bullet K_\varepsilon \stackrel{\text{a.e.}}{=}P_\bullet,\quad\|P_\bullet|_{\mathbb S^{n-1}}\|_1\lesssim \|\Omega \|_q, \quad\|R_\bullet K_\varepsilon - P_\bullet \mathbb 1_{\set{x\given |x|>\varepsilon}}\|_1\lesssim \|\Omega \|_q.\]
+可得到:
+\begin{theorem}
+    令$\Omega\in\mathcal L^1(\mathbb S^{n-1})$且$\Omega +\Omega^\sim \in\mathcal L^q(\mathbb S^{n-1})$, $q>1$, 则
+    \[Tf\coloneqq \frac{\Omega (\cdot ')}{|\cdot |^n}*f.\]
+    在$\mathcal L^{(1,\infty)}$上强有界.
+\end{theorem}
+\begin{proof}
+    只考虑$\Cc$上的函数和$\Omega $偶的情形. 由定义$Tf=\lim_{\varepsilon \to 0}K_\varepsilon *f$, $K_\varepsilon*f=-\sum R_\bullet (R_\bullet K_\varepsilon *f)$. 且
+    \[R_\bullet K_\varepsilon *f=(R_\bullet K_\varepsilon - P_\bullet \mathbb 1_{\set{x\given |x|>\varepsilon}})*f + P_\bullet \mathbb 1_{\set{x\given |x|>\varepsilon}}*f \eqqcolon \Delta _\varepsilon *f + P_\bullet \mathbb 1_{\set{x\given |x|>\varepsilon}} *f.\]
+    其中$\|\Delta _\varepsilon * f\|_p\leqslant \|\Delta \|_1\|f\|_p\lesssim \|\Omega \|_1\|f\|_p$. 而$P_\bullet \mathbb 1_{\set{x\given |x|>\varepsilon}} $是奇核, 故其与$f$的卷积几乎处处存在, 且$f\mapsto \sup_{\varepsilon>0}|P_\bullet \mathbb 1_{\set{x\given |x|>\varepsilon}}*f|$在$\mathcal L^{(1,\infty)}$上强有界. 故
+    \[\|P_\bullet \mathbb 1_{\set{x\given |x|>\varepsilon}}*f\|_p\lesssim\Bigl\|\sup_{\varepsilon>0}|P_\bullet \mathbb 1_{\set{x\given |x|>\varepsilon}}*f|\Bigr\|_p\lesssim\|P_\bullet\|_1\|f\|_p\lesssim\|\Omega \|_q\|f\|_p.\]
+    故由Riesz变换也是$\mathcal L^{(1,\infty)}$强有界得到
+    \[\|K_\varepsilon*f\|_p\lesssim \|\Omega \|_q\|f\|_p.\]
+    但由Fatou引理: $\|Tf\|_p\leqslant \lim_{\varepsilon \to 0} \|K_\varepsilon*f\|_p\lesssim \|\Omega \|_q\|f\|_p$.
+\end{proof}
+
+\section{Banach代数和谱理论}
+\def\C*{\ensuremath{\text{C}^*}}
+
+Banach代数是$\mathbb C$上的代数赋予范数$\|\cdot \|$满足
+\[\|xy\|\leqslant \|x\|\|y\|.\]
+一个$*$-代数是代数赋予对合运算:
+\[(x+y)^*=x^*+y^*,\quad (\lambda x)^*=\overline{\lambda }x^*,\quad(xy)^*=y^*x^*,\quad *\circ *=\operatorname{id}.\]
+若满足$\|x^*x\|=\|x\|^2$则称为\C*代数. 以下是几个著名的例子:
+\begin{itemize}
+    \item 最基本的例子, 令$H$是Hilbert空间, 则$\operatorname{End}(H)$是含幺\C*代数, 其中对合定义为伴随.
+    \item 令$X\in\CHaus$, 则$(C(X),\sup,f\mapsto \overline{f})$是一个\C*代数. 令$X$局部紧Hausdorff, 则$\sup$亦有意义, 但此时\C*代数无幺元.
+    \item $l^1\coloneqq \mathcal L^1(\mathbb{Z}, \operatorname{card})$. 则$(l^1,\|\cdot \|_1,a\mapsto \overline{a}^\sim)$是一个Banach *-代数, 但不是\C*的, 其中$ab\coloneqq a*b$. 这个代数与Wiener $1/f$定理直接相关. 注意到$l^1$由$e=\mathbb 1_{0}$, $\mathbb 1_{-1}$和$\mathbb 1_{1}$生成.
+\end{itemize}
+\subsection{含幺Banach代数中的可逆元}最基本的例子是$\lambda -x$, 若$\|x\|<\lambda $, 则$(\lambda -x)^{-1} =\sum_{n\geqslant 0}x^n / \lambda ^{n+1}$. 这个例子可以导出Banach代数中可逆元的分布:
+\def\Inv{\operatorname{Inv}}
+\begin{lemma}
+    令$\mathscr A$是含幺Banach代数, 则$\Inv\mathscr A$是开集, 且$x\mapsto x^{-1} $可微.
+\end{lemma}
+\begin{proof}
+    易见$B(x,\|x^{-1} \|^{-1} )\subset \Inv\mathscr A$: $\|yx^{-1} -1\|\leqslant \|y-x\|\|x^{-1} \|<1$, 故$yx^{-1} \in\Inv\mathscr A\implies y\in\mathscr A$. 令
+    $u(y)=-x^{-1} yx^{-1} $, 则
+    \[\|(x+y)^{-1} -x^{-1} -u(y)\|=\|(1+x^{-1} y)^{-1} x^{-1} -x^{-1} +x^{-1} yx^{-1} \|.\]
+    其中$1+x^{-1} y$的可逆性由$y<\|x^{-1}\|^{-1} /2$保证. 故
+    \[\|(1+x^{-1} y)^{-1} x^{-1} -x^{-1} +x^{-1} yx^{-1} \|\leqslant \| (1+x^{-1} y)^{-1} -(1-x^{-1} y)\|\|x^{-1} \|.\]
+    现在估计$\| (1+x^{-1} y)^{-1} -(1-x^{-1} y)\|$, 令$z=x^{-1} y$, 则
+    \[\|(1+z)^{-1} -(1-z)\|=\left\| \sum_{n\geqslant 0}(-z)^n - 1 + z \right\|\leqslant \sum_{n\geqslant 0}\|z\|^n\leqslant \frac{\|z\|^2}{1-\|z\|}. \]
+    故令$\|y\|\to 0$得到
+    \[\|(1+z)^{-1} -(1-z)\|=o(\|z\|)=o(\|y\|).\qedhere\]
+\end{proof}
+同理, $x\mapsto (\lambda -x)^{-1} $亦可微.
+\begin{theorem}[Gel'fand]
+    含幺Banach代数中任意元的谱是非空紧集.
+\end{theorem}
+\def\sp{\operatorname{spec}}
+\begin{proof}
+    有界闭显然, 只需证明非空. $\sp x=\varnothing$. 但$\forall \phi \in\mathscr A^*$, $\phi ((\lambda -x)^{-1})$可微, 故是整函数, 由$\|(\lambda -x)^{-1}\|\lesssim 1/|\lambda |$得有界, 故为常数, 与$\phi $可以分点矛盾.
+\end{proof}
+\begin{cor}[Gel'fand\,--\,Mazur]
+    令$\mathscr A$是含幺Banach代数且无平凡不可逆元, 则$\mathscr A\cong\mathbb C$.
+\end{cor}
+定义谱半径为$\rho (x)=\sup\set{|\lambda |\given \lambda \in\sp x}$, 则$\rho (x)\leqslant \|x\|$. 则
+\begin{theorem}[Beurling]
+    $\rho (x)=\inf_n\|x^n\|^{1 / n}$, 即
+    \[\rho (x)=\inf\set{\|x\|_{\mathscr A}\given \|\cdot \|_{\mathscr A}~\text{\kaishu 是$\mathscr A$上的范数}}.\]
+\end{theorem}
+\begin{proof}
+    $\lambda ^n-x^n=(\lambda -x)\sum_{j=0}^{n-1}\lambda ^jx^{n-1-j}$. 故$\lambda \in\sp x\implies \lambda^n\in \sp x^n$. 即
+    \[\lambda \leqslant \liminf \|x^n\|^{1 / n}.\]
+    反之, 令$\phi \in\mathscr A^*$, $\phi ((\lambda -x)^{-1} )$在$\lambda >\rho (x)$上可微, 故解析(考虑其在无穷远点的展开):
+    \[\phi ((\lambda -x)^{-1} ) = \sum_{n\geqslant 0} \frac{\phi (x^n)}{\lambda ^{n+1}}.\]
+    故$\phi (x^n) / \lambda ^{n+1}$有界. 将$x^n / \lambda ^{n+1}$视为$\mathscr A^{**}$中元素, 由一致有界性定理得到$x^n / \lambda ^{n+1}$有界, 故$\|x^n\|\leqslant C\lambda ^{n+1}\implies \limsup\|x^n\|^{ 1/n}\leqslant \rho (x)$.
+\end{proof}
+将$\mathscr A$上的乘性泛函的集合称为$\sp \mathcal A$. 则$\forall h\in\sp \mathscr A$, $|h(x)|\leqslant \|x\|$. 若不然, 由$h(x)-x\in\ker h$和可逆矛盾.
+
+现给定$\mathscr A$的真理想$I$, 则$I\subset (\Inv\mathscr A)^\complement$. 故$\overline{I}\subset (\Inv\mathscr A)^\complement$. 由Zorn引理保证极大理想存在性后有:
+\begin{theorem}
+    $\ker:\sp \mathscr A\to \set{\mathscr A~\text{\kaishu 的极大理想集合}}$是一个双射.
+\end{theorem}
+\begin{proof}
+    先证明$\ker h$极大. 由$h(x)-x\in\ker h$得到$\ker h+\mathbb C=\mathscr A$. 故极大.
+
+    然后是$\ker$是单射, 令$\ker h_1=\ker h_2$, 则$h_1(x-h_2(x))=0\implies h_1=h_2$.
+
+    最后是$\ker$是满射, 给定一个极大理想$I$, 其必然是闭的, 则
+    $\mathscr A / I\cong \mathbb C$: 由其只有平凡理想得到每个非零元可逆, 再应用Gel'fand\,--\,Mazur定理即得. 故将两者等同, 投影映射$π$就是所需乘性泛函.
+\end{proof}
+Gel'fand变换可将$\mathscr A$中元视为$C(\sp \mathscr A)$中元素, 其中$\sp \mathscr A$赋予弱\/$^*$拓扑, 则其是$\mathscr A^*$中单位球内闭集, 由Banach\,--\,Alaoglu定理, 其是个紧Hausdorff空间. 定义Gel'fand变换:
+\[\Gamma :x\mapsto \hat{x} = \bigl[f\mapsto f(x)\bigr].\]
+则
+\begin{theorem}[Gel'fand表示]
+    对Gel'fand变换有以下事实成立. 其中$\mathscr A$交换.
+    \begin{itemize}
+        \item 由于$\sp \mathscr A$紧Hausdorff, 故$C(\sp \mathscr A)$是一个\C*代数. Gel'fand变换则是代数同态;
+        \item $x\in\Inv(\mathscr A)\iff 0\notin\hat{x}(\sp\mathscr A)$, $\operatorname{im}\hat{x}=\sp x$.
+        \item 若$\mathscr A$是由$x$, $e$或者$x$, $x^{-1} $生成的, 则$\hat{x}:\sp\mathscr A\to \sp x$是一个同胚.
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    第一款是显然的. 第二款: $\lambda \in\sp x\iff \lambda -x$不可逆$\iff (\lambda -x)\mathscr A$是真理想$\iff \exists h\in\sp \mathscr A$, $h(\lambda -x)=h(\lambda)-h(x)=0$; 第三款: 由第二款, $h_n\stackrel{w.}{\to } h\implies h_n(x)\to h(x)\iff \hat{x}(h_n)\to \hat{x}(h)$, 故$\hat{x}$连续, 由两个谱都是紧Hausdorff的, 只需证明$\hat{x}$是双射即可, 满射性由第二款得到, 证明单射性只需证明$h$由$h(x)$决定即可, 这由$\mathscr A$是由$x$, $e$或者$x$, $x^{-1} $生成即得.
+\end{proof}
+两个例子:
+\begin{theorem}
+    \begin{itemize}
+        \item 令$X\in\CHaus$, 则$C(\sp X)\cong X$.
+        \item $\sp l^1\cong\mathbb T$.
+    \end{itemize}
+\end{theorem}
+\def\pb{{\text{pb}}}
+\begin{proof}
+    定义$x^\pb:f\mapsto f(x)$. 则由$C(X)$分点得$\pb: x\mapsto x^\pb$单射; $x_ \alpha \to x\implies f(x_ \alpha )\to f(x)\implies (x_ \alpha )^\pb \stackrel{\text{w}^*.}{\to }x^\pb$. 故$\pb$是连续的, 只需证明满射, 也即是连续函数环上的极大理想与$X$的对应. 若理想$I$不含于某个$\ker x^\pb$, 则$\exists f_x$, $f_x(x)\neq 0$. 考虑
+    \[X=\bigcup_{x\in X} (f_x(0))^\complement\implies
+        X=\bigcup_{i=1}^n (f_{x_i}(0))^\complement
+        .\]
+    令$g=\sum f_{x_\bullet}\overline{f_{x_\bullet}}\in I$, 则$g>0$, 故可逆与$I$真矛盾.
+
+    对第二款, 令$F:\mathbb T\to C(\sp l^1)$, $\mathrm{e} ^{\mathrm{i} \theta }\mapsto [\{a_\bullet\}\mapsto \sum a_\bullet\mathrm{e} ^{\mathrm{i} \bullet \theta }]$. 由于$l^1$由$\mathbb 1_{-1}$, $\mathbb 1_{1}$生成, 故$\sp l^1\cong \sp \mathbb 1_{1}$.
+
+    考虑$\lambda -\mathbb 1_{1}$, 令$a\in l^1$, 则
+    \[(\lambda -\mathbb 1_{1})a = (\lambda -\mathbb 1_{1}) * a =\{\lambda a_\bullet - a_{\bullet -1}\}.\]
+    故(如果存在)
+    \[(\lambda -\mathbb 1_{1})^{-1} = a_0\sum_{n\geqslant 0} \frac{\mathbb 1_{n}}{\lambda ^n} + (\lambda a_0-1)\sum_{n\geqslant 1}\lambda ^{n-1}\mathbb 1_{-n}.\]
+    令其属于$l^1$得到
+    \[(\lambda -\mathbb 1_{1})^{-1} =
+        \begin{cases}
+            -\sum_{n\geqslant 1} \lambda ^{n-1} \mathbb 1_{-n}, & |\lambda |<1; \\
+            \sum_{n\geqslant 0} ({\mathbb 1_n} / {\lambda ^n}), & |\lambda |>1; \\
+            \text{\kaishu 不存在},                              & |\lambda |=1.
+        \end{cases}\]
+    又$\exists ! f\in \sp l^1$满足$f(\mathbb 1_1)=\mathrm{e} ^{\mathrm{i} \theta }$, 故
+    \[f(a)=f\Bigl(\sum a_\bullet \mathbb 1_\bullet\Bigr)=\sum a_\bullet\mathrm{e} ^{\mathrm{i} \bullet \theta }.\]
+    而只需令$f=F(\theta )$即可.
+\end{proof}
+\begin{cor}[Wiener $1 / f$定理]
+    令$f\in\mathcal L^1(\mathbb T)$, 且$f^\land\in l^1$, $f^{-1} (0)=\varnothing$, 则$(1/f)^\land\in l^1$.
+\end{cor}
+\begin{proof}
+    由$\sum f^\land\mathrm{e} ^{\mathrm{i} \bullet(\cdot )}$一致收敛, 故$f$几乎处处为一个连续函数, 又$f$不为$0$, 故
+    \[\forall h\in\sp l^1,\quad h(f)=\sum f^\land\mathrm{e} ^{\mathrm{i} \bullet \theta }\neq 0.\]
+    故$g^\land $是$f^\land$的逆, 易见$g\stackrel{\text{a.e.}}{=}1 /f$.
+\end{proof}
+以上处理未用到对合运算, 以下是一些关于对合运算的例子.
+\subsection{Banach\/$^*$代数和\C*代数}
+$\Gamma $是代数同态, 但不一定是$*$的, 因此称$\Gamma $是$*$时的$\mathscr A$为对称的. 即$\Gamma{(x^*)}=\overline{\Gamma{(x)}}$.
+\begin{prop}
+    \C*代数是对称的. 更一般地, $\mathscr A$是对称的当且仅当$x=x^*\implies \operatorname{im}\hat{x}\subset\mathbb R$.
+\end{prop}
+\begin{proof}
+    若$\mathscr A$对称, 则$\Gamma{(x^*)}=\overline{\Gamma{(x)}}$, 故$x=x^*\implies \Gamma{(x^*)} = \overline{\Gamma{(x)}}\implies \operatorname{im}\Gamma{(x)}\subset\mathbb R$. 反之, 令$u=(x+x^*) / 2$, $v = (x-x^*) / 2\mathrm{i} $, 则$u^*=u$, $v^*=v$, 由$\Gamma (u)$, $\Gamma (v)$实值得到
+    \[\Gamma (x^*)=\Gamma (u-\mathrm{i} v)= \overline{\Gamma (x)}.\]
+
+    若$\mathscr A$是\C*的, 则令$x=x^*$, $h\in\sp\mathscr A$, $\hat{x}(h)=a+b\mathrm{i} $, 故$h(x+\mathrm{i} t)=a + (b+t)\mathrm{i} $, 令$z=x+\mathrm{t} i$, 则
+    \[a^2+(b+t)^2 = |h(z)|^2\leqslant \|z\|^2 = \|zz^*\|\leqslant \|x^2\|+t^2.\]
+    即$a^2+b^2+2bt \leqslant \|x^2\|$, 故$b=0$.
+\end{proof}
+\begin{theorem}[Gel'fand\,--\,Naimark]
+    令$\mathscr A$是交换含幺的\C*代数, 则$\Gamma $是$\mathscr A$到$C(\sp \mathscr A)$的等距同构.
+\end{theorem}
+\begin{proof}
+    等距只需证明$\|x^*x\|=\|x\|^2=\|\hat{x}\|^2_{\sup}=\rho (x)^2$. 若等距, 则应有$\|x\|^2=\|\hat{x}\|^2_{\sup}=\|\hat{x}^2\|_{\sup}=\|\hat{x^2}\|=\|x^2\|$. 故先考虑
+    \[\|x^2\| = \|x\|^2.\]
+    此可以得到$\|x^{2^n}\|=\|x\|^{2^n}$. 故
+    \[\rho (x)= \lim_{n \to \infty}\bigl(\|x^{2^n}\|\bigr)^{1 / 2^n} = \|x\|.\]
+    因此只需证明$\|x^2\| = \|x\|^2$即可. 令$y=x^*x$, 则
+    \[\|y^2\|=\|yy^*\|=\|y\|^2.\]
+    故$\|y\|=\|\hat{y}\|_{\sup}$. 而一般情形有
+    \[\|x\|^2=\|y\|=\|\hat{y}\|_{\sup}=\|(x^*x)^\land\|_{\sup}=\||\hat{x}|^2\|_{\sup}=\|x\|_{\sup}^2.\]
+    故对一般元也是等距.
+
+    现只需证明满射. 由等距和$\mathscr A$的Banach性, $\operatorname{im}\Gamma $是$C(\sp\mathscr{ A})$的闭子代数, 只需使用Stone\,--\,Weierstraß定理: 自伴随已由对称性获得, 含幺显然, 分点来自对偶.
+\end{proof}
+最后, 我们需要证明含幺\C*代数的范数是唯一确定的. 这可由$\|x^*x\|$唯一确定或自$*$-元的范数唯一确定得到.
+\begin{theorem}
+    令$\mathscr A$是含幺的\C*代数, 则
+    \[\|x\| = \sqrt{\rho (x^*x)}.\]
+\end{theorem}
+\begin{proof}
+    证明思路如下:
+    \begin{itemize}
+        \item 先取$\mathscr A$的某个交换\C*子代数$\mathscr B$来研究, 我们需要区分两个代数的谱;
+        \item 剩下的由$\|x\|=\|\hat{x}|_{\mathscr B}\|_{\sup}=\rho _{\mathscr B}(x)$得到. 我们需要说明$\rho _{\mathscr B}(x)=\rho _{\mathscr A}(x)$.
+    \end{itemize}
+    故只需证明$\sp_{\mathscr A}(x^*x)=\sp_{\mathscr B}(x^*x)$即可, 其中$\mathscr B$是由$x^*x$, $1$生成的\C*闭子代数.
+    \begin{lemma}
+        令$\mathscr A$是含幺Banach代数, $\mathscr B\subset\mathscr A$是闭子代数.
+        \begin{itemize}
+            \item $x\in\mathscr B$, $\sp_{\mathscr B}x$无处稠密, 则$\sp_{\mathscr A}x=\sp_{\mathscr B}x$.
+            \item 令$\mathscr A$, $\mathscr B$是\C*含幺的, 则$x\in\mathscr B$, $x\in\Inv\mathscr A\implies x\in\Inv\mathscr B$.
+        \end{itemize}
+    \end{lemma}
+    \begin{proof}[proof of \textsc{Lamma}]
+        第一款: 令$\lambda \in\sp_{\mathscr B}x$, 则$\exists \{\lambda_\bullet\}\subset (\sp_{\mathscr B}x)^\complement$, $\lambda_\bullet\to \lambda$. 则$\|(\lambda _\bullet-x)^{-1} \|\to \infty$. 否则令$\|(\lambda _\bullet-x)^{-1} \|\leqslant ^\bullet N$, $\|\lambda _\bullet-\lambda\|<1 / N$ 时可得$\lambda -x = \lambda _\bullet - x - (\lambda _\bullet-\lambda) \in\Inv\mathscr B$, 矛盾. 同时, $\lambda -x \notin\Inv\mathscr A$, 否则$\|(\lambda _\bullet-x)^{-1} \|\to \|(\lambda -x)^{-1} \|$. 故$\sp_{\mathscr A}x=\sp_{\mathscr B}x$.
+
+        第二款: $\mathscr B$显然闭. 令$\mathscr C=\operatorname{cl}\operatorname{span}\{x^*x,1\}$. 由$x\in\Inv\mathscr A\implies x^*x\in\Inv\mathscr A$. 故$0\in\sp_{\mathscr A}(x^*x)$, 反之, 由$(x^*x)^*=x^*x\in\mathscr C$, 故$\mathscr C$也是\C*的, 故对称: $\sp_{\mathscr C}(x^*x)=\operatorname{im}\Gamma (x^*x)\subset\mathbb R$. 由第一款, $\sp_{\mathscr C}(x^*x)=\sp_{\mathscr A}(x^*x)$, 故$0\notin\sp_{\mathscr C}(x^*x)\implies x^*x\in\Inv\mathscr C$. 而$x^{-1} = (x^*x)^{-1} x^*\in\mathscr B$.
+    \end{proof}
+    故$\sp_{\mathscr A}(x^*x)=\sp_{\mathscr B}(x^*x)$由引理第二款得到.
+\end{proof}
+
+\subsection{Banach\/$^*$代数和\C*代数的幺}
+先讨论一般Banach\/$^*$代数的幺. 对非含幺的Banach\/$^*$代数, 可强制加入一个幺元, 也即等价直和上$\mathbb C$:
+\[\bigl(\mathscr A\oplus \mathbb C,~(x,a)(y,b) = (xy+ay+bx,ab),~\|\cdot \|_{\mathscr A\oplus \mathbb C}\coloneqq \|\cdot \|_{\mathscr A}+| \cdot |_{\mathbb C},~*=((\,\cdot\,) ^*,\overline{(\,\cdot\,) })\bigr).\]
+是一个合理的延拓: 其中$\mathscr A\subset\mathscr A\oplus \mathbb C$是一个$\operatorname{codim}$为$1$的闭理想, 且$\|\cdot \|_{\mathscr A\oplus \mathbb C}|_{\mathscr A}=\|\cdot \|_{\mathscr A}$. $*_{\mathscr A\oplus \mathbb C}|_{\mathscr A}=*_{\mathscr A}$. 且$*$的延拓是唯一的.
+
+以下是两个例子:
+\begin{itemize}
+    \item 考虑$(\mathcal L^1(\mathbb R,m),*)$. 其没有卷积幺元($\symup\delta$). 故只能将$\symup\delta$视为测度(或分布), 考虑$\mu_f(E)\coloneqq \int_E f\d m$. 故$\mathcal L^1(\mathbb R)\oplus\mathbb C=\operatorname{span}\{\mu _{L^1(\mathbb R)},\symup\delta\}$. 其中卷积定义为测度的卷积($\int h\d(\mu_f * \mu_g )\coloneqq \iint h(x+y)\d \mu _f(x)\d \mu _g(y)=\int (f*g)h \d m$)或分布的卷积. 而$\|f+a\symup\delta\|_{\mathcal L^1(\mathbb R)\oplus\mathbb C}=\int|f|\d m+|a|= |\mu _{f}+a\symup\delta|(\mathbb R)$. 但这个例子是险要的, 最后的等式依赖于$m(\operatorname{supp}\symup\delta)=0$而非其上的代数结构. 以下是一个让幺的支集更大的例子.
+    \item $C_0(X)$, 考虑$X\in\LCHaus\setminus\Cpt$的情形. 则其上无幺. 考虑$X$的单点紧化$X^*$, 则$C(X^*) / C_0(X)\cong \mathbb C$. 即$C_0(X)\oplus\mathbb C\cong C(X^*)$. 则
+          \[\|f\|_{C(X^*)}=\sup |f-f(\infty)|+|f(\infty)|.\]
+          但其并不是$C(X^*)$上的一致度量, 故不是\C*的.
+\end{itemize}
+以下是\C*代数的单位化:
+\begin{theorem}
+    由于$*$的延拓是唯一的, 故需要修改的是范数. 存在唯一的范数延拓使得\C*代数$\mathscr A\oplus\mathbb C$是\C*的.
+\end{theorem}
+\begin{proof}
+    由于$\mathscr A$是$\mathscr A\oplus\mathbb C$的理想, 则$(x,a)\in\mathscr A\oplus\mathbb C$可视为$\mathscr A\to \mathscr A$的线性算子$y\mapsto xy+ay$. 考虑此算子的范数作为$\mathscr A\oplus\mathbb C$的范数:
+    \[\|(x,a)\|\coloneqq \sup\set{\|xy+ay\|\given \|y\|\leqslant 1}.\]
+    则:
+    \begin{itemize}
+        \item $\|(x,a)(y,0)\|\leqslant (\|x\|+|a|)\|y\|$, 故其是有界的;
+        \item $\|(x,a)\|=0\implies x=0$, $a=0$. 若否, 则$\forall y\in\mathscr A$, $xy+ay=0$, 则$x\neq 0$, 同时$a\neq 0$. 也即$-x / a$是一个左幺, 而由于$*$是对合的, 则$(-x / a)^*$是一个右幺, 与$\mathscr A$无幺矛盾;
+        \item 容易计算得到$\|\cdot \|_{\mathscr A\oplus\mathbb C}|_{\mathscr A}=\|\cdot \|_{\mathscr A}$, 而$\mathscr A$是$\mathscr A\oplus\mathbb C$的闭理想, 故$\mathscr A\oplus\mathbb C / \mathscr A$是完备的, 投影映射是(线性)连续的, 故保Cauthy列. 而$(x_\bullet,a_\bullet)$是Cauthy的$\implies x_\bullet$和$a_\bullet$都是Cauthy的. 故收敛, 即$\mathscr A\oplus\mathbb C$是Banach的;
+        \item $\mathscr A\oplus\mathbb C$是\C*的. 令$\|y\|=1$, $\|xy+ay\| >(1-\varepsilon)\|(x,a)\|$. 则
+              \[\begin{aligned}
+                      (1-\varepsilon)^2\|(x,a)\|^2\leqslant \|xy+ay\|^2 & = \|(xy+ay)^*(xy+ay)\|                              \\
+                                                                        & =\|(y^*,0)(x,a)^*(x,a)(y,0)\|                       \\
+                                                                        & \leqslant \|y\|^2\|(x,a)^*(x,a)\|=\|(x,a)^*(x,a)\|.
+                  \end{aligned}\]
+              故易见是\C*的(由$*$的对合可得到反向的不等式).
+    \end{itemize}
+    延拓的唯一性由\C*代数的范数是唯一确定的得到.
+\end{proof}
+此时记$\mathscr A$的谱其上的乘性线性泛函, 其由一个唯一的延拓:
+\[h\mapsto h\oplus\operatorname{id}:(x,a)\mapsto h(x)+a.\]
+而$0$的延拓就是投影映射$\mathscr A\oplus\mathbb C\to (\mathscr A\oplus\mathbb C) / \mathscr A$. 因此$\sp\mathscr A\cap\{0\}$和$\sp(\mathscr A\oplus\mathbb C)$一一对应. 此时$\sp(\mathscr A\oplus\mathbb C)$是$\CHaus$的, 故$\sp\mathscr A$是$\LCHaus$的, $\sp(\mathscr A\oplus\mathbb C)$是其单点紧化.
+
+现在考虑Gel'fand变换: $(x,0)^\land|_{\sp\mathscr A}=\hat{x}$. 由$(x,0)^\land(0\oplus\operatorname{id})=0$, 故$(x,0)^\land\in \set{f\in C(\sp(\mathscr A\oplus\mathbb C))\given f(\infty)=0}\implies \hat{x}\in C_0(\sp\mathscr A)$. 故在一些定理中将$C(\sp\mathscr A)$换成$C_0(\sp\mathscr{A} )$亦成立.
+
+\begin{theorem}
+    定义如上. $\sp\mathscr A\in\LCHaus$, $\operatorname{cl}\sp\mathscr A=\sp\mathscr A\cap\{0\}$. Gel'fand变换是从$\mathscr A$到$C_0(\sp\mathscr A)$的代数同态. 由于$\{0\}$不影响谱半径, 故$\|\hat{x}\|_{\sup}=\rho (x)$亦成立.
+
+    同时, 令$X\in\LCHaus\setminus\Cpt$, 则$X$与$C_0(X)$一一对应.
+
+    令$\mathscr A$是非含幺的交换\C*代数, 则$\Gamma$是$\mathscr A$到$C_0(\sp\mathscr A)$的等距同构(只需移除$0\oplus\operatorname{id}$对应的理想$\mathscr A$, $\sp(\mathscr A\oplus\mathbb C)$中的$0$, $C(\mathscr A)$以及考虑$(x,a)^\land$对应$\hat{x}+a$即可).\pushQED{\qed}\popQED
+\end{theorem}
+\subsection{谱定理}
+\def\barv#1{\ensuremath{{\smash{\overline{\smash{#1}\rule{0pt}{.6578em}}}\vphantom{l}\mkern-.8mu}^\vee}}
+\def\v*#1{\ensuremath{{\smash{\smash{#1}\rule{0pt}{.6578em}}}\vphantom{l}}^{\vee*}}
+
+给定有限维线性空间$V$, 其同构于$\mathbb C^n$, 给定其上的一个自伴随变换$\phi $, 存在酉同构$U:V\to \mathbb C^n$, 满足
+\[U\phi U^{-1} x = \<{y,x}.\]
+其中$y$是某个$\mathbb C^n$中向量, $\<{y,x}$是逐点乘积. 亦或是存在投影变换$P_\bullet$:
+\[\phi = \sum_{\sp\phi }\lambda_\bullet P_\bullet.\]
+在无穷维的情形, 上式求和应当换成对投影的积分. 同时, 由于投影算子$\in L(H)$($H$是Hilbert空间)是一个(可能\C*)的代数. 故可以考虑用$\CHaus$空间上的连续函数来表示这些算子.
+
+投影算子满足$P^2=P$, 对正交投影算子还有$\ker P\mathop{\bot}\operatorname{im}P$. 前者对应连续函数的平方须是自身, 后者对应$\<{Pu,v}=\<{u,Pv}$. 故可能连续函数的共轭也是自身. 在抽象空间上的例子自然是$1$和$0$. 但考虑一般的情形$\mathbb{1}_E$却并不是连续的, 因此需要研究$B(\sp\mathscr A)$(有界可测函数)到$L(H)$的对应, 其中$\mathscr A$是$L(H)$中的某个含幺交换\C*子代数. 但前后各自都是完备的, 连续函数在有界可测函数并非稠密, 故需要用到将内积等构造变成容易研究有界性的测度积分, 也就是Riesz表示定理.
+
+回忆, 若$u:H^2\to \mathbb C$是双有界, 半双线性的, 则存在有界线性变换$T\in L(H)$满足$u=\<{T(-),-}$. 以此来诱导内积和线性变换, 测度之间的联系.
+
+现以$f^\vee$记$f\in C(\sp\mathscr A)\eqcolon C(\Sigma )$的逆Gel'fand变换, 则$f\mapsto \<{f^\vee u,v}\leqslant \|f^\vee\|\|u\|\|v\|=\|f\|_{\sup}\|u\|\|v\|$. 故存在(由$C(\Sigma )$是紧致的, 故Radon测度是正规的)唯一的正规复Borel测度$\mu _{u,v}$满足:
+\[\<{f^\vee u,v}=\int f\d \mu _{u,v},\quad \|\mu _{u,v}\|=\|f\mapsto \<{f^\vee u,v}\|\leqslant \|u\|\|v\|.\]
+\begin{prop}
+    $(u,v)\mapsto \mu_{u,v}$是半双线性的, $\mu _{u,v}=\overline{\mu _{v,u}}$, $\mu _{u,u}\geqslant 0$. 也即, $(u,v)\mapsto \mu_{u,v}$是测度值内积.
+\end{prop}
+\begin{proof}
+    半双线性由内积得到. 由于\C*代数是对称的, 故$\v* f=\barv f$, 则
+    \[\<{f^\vee u,v}=\<{u,\v* f}=\overline{\<{\v* f,u}}=\overline{\<{\barv f v,u}}.\]
+    也即$\int f\d \mu _{u,v}=\overline{\int \overline{f}\d \mu _{v,u}}=\int f\d \overline{\mu _{u,v}}$. 从而$\mu _{u,u}$是实测度, 令$f\geqslant 0$, 则$\v*{\sqrt{f}\mkern 1mu}\!{\smash{\sqrt{f}\vphantom{l}\mkern 1mu}}^\vee=(\sqrt{f}^\vee)^2=f^\vee$. 故
+    \[\int f \d \mu _{u,u}=\bigl\|{\smash{\textstyle\sqrt{f}\vphantom{l}\mkern 1mu}}^\vee u\bigr\|^2\geqslant 0.\qedhere\]
+\end{proof}
+现在考虑$f\in B(\Sigma )$, $(u,v)\mapsto \int f\d \mu _{u,v}$是双有界, 半双线性的. 故$\exists f^\vee \in L(H)$, $\int f\d \mu _{u,v}=\<{f^\vee u,v}$. 由唯一性可得其在$C(\Sigma )$上的定义与原来一致.
+\begin{theorem}
+    $f\mapsto f^ \vee$是$B(\Sigma )\to L(H)$的$*$-同态.
+\end{theorem}
+\begin{proof}
+    连续函数情形显然, 但连续函数在有界函数中并非稠密, 故需要用Riesz表示定理. 注意到上述正规Borel测度由其在连续函数上的行为唯一决定.
+
+    令$f\in B(\Sigma )$, 则
+    \[\<{\barv f u,v}=\int \overline{f}\d \mu _{u,v}=\overline{\int f\d \mu _{v,u}}=\overline{\<{f^\vee v,u}}=\<{u,f^\vee v}=\<{(f^\vee)^*u,v}.\]
+    故$\barv f=\v*f u$.
+
+    现在证明$(fg)^\vee = f^\vee g^\vee$. 对连续函数是成立的, 即:
+    \[\int f\d \mu _{g^\vee u,v}=\int fg\d \mu _{u,v}=\int f(g\d \mu _{u,v})\implies \d \mu _{g^\vee u,v} = g\d \mu _{u,v},\quad g\in C(\Sigma ).\]
+    故对$f\in B(\Sigma )$,
+    \[\int g\d \mu _{u,\v* f v}=\<{g^\vee u,\v* f v}=\<{f^\vee g^\vee u,v}=\int f\d \mu _{g^\vee u,v} = \int fg\d \mu _{u,v}.\]
+    故$\forall f\in B(\Sigma )$, $\d \mu _{u,\v* f v}=f\d\mu _{u,v}$. 故
+    \[\<{f^\vee g^\vee u,v}=\<{ g^\vee u,\v*f v}=\int g\d \mu _{u,\v* f v}=\int gf\d\mu _{u,v}=\<{(fg)^\vee u,v}.\]
+    故$(fg)^\vee = f^\vee g^\vee$.
+\end{proof}
+\begin{remark}
+    由控制收敛定理(D.C.T.), 可以得到若$f_\bullet\to f\in B(\Sigma )$, 则$\<{f_\bullet^\vee u,v}\to \<{u,v}$. 用连续函数在积分意义下逼近有界函数可以得到$\operatorname{im}\vee\subset\operatorname{cl}_{w.}\mathscr A$. 故实际上是在$\mathscr{A} $的弱闭包下讨论.
+\end{remark}
+现在终于可以考虑$\mathbb 1^\vee_E\eqqcolon P(E)$, 其中$E\subset \sigma $是Borel的.
+
+定义投影值测度为$\nu :(X,\mathcal M)\to \set{\text{\kaishu $L(H)$中的正交投影}}$满足以下性质. 其中$X\in\LCHaus$.
+\begin{itemize}
+    \item $\nu(\varnothing)=0$, $\nu(\Sigma )=\operatorname{id}$;
+    \item $\nu(E\cap F)=\nu(E)\nu(F)$;
+    \item 令不交可数集列$\{E_\bullet\}\subset\mathcal M$, 则$\nu(\bigsqcup E_\bullet)=\sum \nu (E_\bullet)$, 其中求和以强算子拓扑收敛.
+    \item 若$\forall u,v\in H$, $E\mapsto \<{\nu (E)u,v}$是正规测度, 则称$\nu $是正规的.
+\end{itemize}
+(其是一种特殊的谱测度)定义对简单函数的投影值测度积分为满足
+\[\int \sum a_\bullet\mathbb 1_{E_\bullet} \d \nu =\sum a_\bullet \nu (E).\]
+同时, 对一般的可测函数$f$, 定义为满足
+\[\<[\Big]{\Bigl(\int f\d \nu\Bigr) u,v}=\int f(t)\d (\<{\nu (t)u,v}),\quad \forall u,v\in H.\]
+的有界线性算子$\int f\d \nu$.
+
+\begin{theorem}\label{int f dP is *}
+    对$f\in B(X)$, $\int f\d P$存在, $f\mapsto \int f\d \nu $是$B(X)$到$L(H)$的$*$-同态. 对上面的例子来说, $\<{P(E)u,v}=\mu _{u,v}(E)$, 故$P$是正规的投影值测度.
+\end{theorem}
+\begin{proof}
+    对第一款只需证明积分的双有界性. 考虑到$\nu $是投影, 记$\nu _{u,v}(E)=\<{\nu (E)u,v}$, 故$(u,v)\mapsto \nu _{u,v}$可以证明是测度值内积, 故$\nu _{u,u}\geqslant 0$.
+    \[\left| \int f\d \nu _{u,u} \right| \leqslant \|f\|_{\sup}|\nu _{u,u}|\leqslant \|f\|_{\sup}\|u\|^2.\]
+    故是双有界的. $u\neq v$的情形可以用极化恒等式:
+    \[\left| \int f\d \nu _{u,v} \right|\leqslant \frac{\|f\|_{\sup}}{4}\Bigl(\|u+v\|^2+\|u-v\|^2+\|u+\mathrm{i} v\|+\|u-\mathrm{i} v\|^2\Bigr)\leqslant 4\|f\|_{\sup}\|u\|\|v\|. \]
+    故积分存在.
+
+    $f\mapsto \int f\d \nu $的有界线性证毕, 考虑$f_\bullet\to f$, $g_\bullet \to  g$是简单函数对可测函数的一致逼近. 则
+    \[\int f_\bullet g_\bullet \d \nu = \Bigl(\int f_\bullet \d \nu\Bigr)\Bigl(\int g_\bullet \d \nu\Bigr).\]
+    由定义可得, 同时由有界性和强算子拓扑收敛性:
+    \[\int f g \d \nu\leftarrow\int f_\bullet g_\bullet \d \nu = \Bigl(\int f_\bullet \d \nu\Bigr)\Bigl(\int g_\bullet \d \nu\Bigr)\to \Bigl(\int f \d \nu\Bigr)\Bigl(\int g \d \nu\Bigr).\]
+    对简单函数$\phi $, $\int \overline{\phi }\d \nu =(\int \phi d \nu )^*$成立, 由上述逼近得对有界可测函数也成立. 故是$*$-同态.
+
+    现在讨论我们导出的$P$. $P(E)$是投影算子由$\mathbb 1_E^2=\mathbb 1_E$得到, 其是正交的由$\overline{\mathbb 1_E}=\mathbb 1_E$和
+    \[\ker P(E)=\bigcap_{v\in H}\ker\<{P(E)(-),v}=\bigcap_{v\in H}\ker\<{P(E)^*v,-}=\operatorname{im}(P(E)^*)^\bot=\operatorname{im}(P(E))^\bot.\]
+    得到. $P(\varnothing)=0$, $P(\Sigma)=\operatorname{id}$显然. $P(E\cap F)=P(E)P(F)$由$\mathbb 1_{E\cap F}=\mathbb 1_E\mathbb 1_F$和$\vee$的$*$-同态性得到. 强算子拓扑收敛性由
+    \[\|(P(E)-P(E_\bullet))u\|^2=\|P(E\setminus E_\bullet)u\|^2=\<{P(E\setminus E_\bullet)u,P(E\setminus E_\bullet)u}.\]
+    而$\<{P(E\setminus E_\bullet)u,P(E\setminus E_\bullet)u}=\<{P(E\setminus E_\bullet)^*P(E\setminus E_\bullet)u,u}=\<{P(E\setminus E_\bullet)u,u}=\int \mathbb 1_{E\setminus E_\bullet}\d \mu _{u,u}\xrightarrow{\text{D.C.T.}}0$. $P_{u,v}(E)=\mu _{u,v}$已由上述讨论得到.
+\end{proof}
+现在考虑对有界函数$f$的积分: $\int f\d P$满足$\<{(\int f\d P)u,v}=\int f\d \mu _{u,v}$. 故$\int f\d P=f^\vee$. 同理, $x\in\mathscr A\implies \int \hat{x}\d P =x$.
+
+\begin{theorem}[谱定理]
+    令$\mathscr A$是$L(H)$的交换含幺\C*代数. 则存在半有限测度空间$(\Omega ,\mathcal M,\mu )$, 酉变换$U:H\to \mathcal L^\infty(\mu )$, 等距$*$-同态$\phi :\mathscr A\to \mathcal L^\infty(\mu )$, $x\mapsto \phi _x$满足:
+    \begin{itemize}
+        \item $\forall g\in\mathcal L^2(\mu )$, $x\in \mathscr A$满足$UxU^{-1} g=xg$;
+        \item $\Omega $可以认为是$\bigsqcup_{i\in I}\Sigma$, 其中$I$是某个指标集. 且$\phi _x|_{\Sigma_i}=\hat{x}$. 其中指标集$I$的基数由$\{\operatorname{cl}\mathscr Av_i\}_{i\in I}$极大两两正交决定.
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    ~
+    \begin{enumerate}[label = {\scshape Step~\Roman*.}]
+        \item 假设存在$v\in H$满足$\operatorname{cl}\mathscr Av=H$. 令$\mu \coloneqq \mu _{v,v}$满足
+              \[\<{f^\vee v,v}=\int f\d \mu _{v,v}.\]
+              即如之前所定义的. 则$\forall x\in\mathscr A$, $\|xv\|^2=\<{x^*xv,v}=\int (x^*x)^\land \d \mu =\int |\hat{x}|^2\d \mu $.
+
+              故$xv=yv\implies \hat{x}\stackrel{\text{a.e.}}{=}\hat{y}$. 故$xv\mapsto \hat{x}$是个合理的映射, 且是等距. 故能延拓到$H$上: $U:H\to \mathcal L^2(\Sigma ,\mathcal B_{ \Sigma },\mu )$. 由于$H$完备, $\operatorname{im}U$在$\mathcal{L} ^2(\mu )$中闭, 且$C(\Sigma )\subset\operatorname{im}U$, 故由$\mu $正规得到$\operatorname{cl}C(\Sigma )=\mathcal L^2(\mu )$. 故$U$是同构. 令$g\in C(\Sigma )$:
+              \[UxU^{-1} g=Ux g^\vee v= (xg^\vee)^\land = \hat{x}g.\]
+              由于等式两边都是连续的, 故对$g\in\mathcal L^2(\mu )$中也成立.
+        \item 若不存在$v\in H$满足$\operatorname{cl}\mathscr Av=H$. 令$\{v_i\}_{i\in I}$是令$\operatorname{cl}\mathscr Av_i$两两正交的极大组, 由Zorn引理显然存在. 记$H_\bullet=\operatorname{cl}\mathscr A v_\bullet$, 则$H_\bullet$是$\mathscr A$不变子空间, 故$\bigoplus H_\bullet$亦然. 令$u\in (\bigoplus H_\bullet)^\bot$, $v\in\bigoplus H_\bullet$, 则
+              \[\<{xu,v}=\<{u,x^*v}=0.\]
+              故$\mathscr A(\bigoplus H_\bullet)^\bot\subset (\bigoplus H_\bullet)^\bot$. 这意味这$\bigoplus H_\bullet=H$, 否则令$w\in (\bigoplus H_\bullet)^\bot$, 则$\mathscr A w\mathop{\bot}\bigoplus H_\bullet$, 故$\operatorname{cl}\mathscr A w$亦然, 故$\{v_\bullet\}\cap \{w\}$是新的极大组矛盾.
+              % 令$\Omega =\bigsqcup_{i\in I}\Sigma _\bullet$, $\Sigma_\bullet=\Sigma $. 令$\mathcal M=\set{E\given\forall i\in I,\, E\cap \Sigma_\bullet\in\mathcal B_{\Sigma_\bullet}}$. $\mu (E)=\sum_{i\in I}\mu _{v_\bullet,v_\bullet}(E\cap \Sigma _\bullet)$. 由于$\mu _{v_\bullet,v_\bullet}$有限, 故$\mu $半有限. 令$\mathscr A_\bullet=\set{x|_{H_\bullet}\given x\in\mathscr A}$, 则由\textsc{Step~I.}, 存在酉同构$U_\bullet:H_\bullet\to \mathcal L^2(\mu _{v_\bullet,v_\bullet})$, 满足
+              % \[U_\bulletx|_{H_\bullet}U_\bullet^{-1} g=\hat{x}g.\]
+              现在考虑$\mathscr A_\bullet=\set{x|_{H_\bullet}\given x\in\mathscr A}$, $\Upsilon_\bullet=\sp \mathscr A_\bullet$. 则考虑组$(x_\bullet,\mathscr A_\bullet,H_\bullet)$和\textsc{Step~I.}可以得到存在酉变换$V_\bullet:H_\bullet\to \mathcal L^2(\Upsilon_\bullet,\mathcal B_{\Upsilon_\bullet},\nu _{v_\bullet,v_\bullet})$. 满足$\forall x_\bullet\in\mathscr A_\bullet$, $U x_\bullet U^{-1} g= \Gamma _{\mathscr A_\bullet}(x)g$, 其中$g\in C(\Upsilon_\bullet)$. 令$\mathcal N=\set{E\given E\cap \Upsilon_\bullet\in\mathcal B_{\Upsilon_\bullet}}$. 只需考虑$V=\bigoplus V_\bullet:\bigoplus H_\bullet \to \bigoplus L^2(\nu_{\bullet,\bullet} )$即可: 令$\nu(E) = \sum \nu_\bullet(E\cap \Upsilon_\bullet)$, 则其是半有限的. $\mathcal L^2(\nu ) \cong\bigoplus \mathcal L^2(\nu_{\bullet,\bullet} )$. 故令$z\in H_i$:
+              \[VxV^{-1} g(z)= V_i x|_{H_i}H_i^{-1} g(z)=\hat{x}(z)g(z).\]
+        \item 由于$\Upsilon_\bullet$不一定是$\Sigma$, $\nu _{\bullet,\bullet}$也不一定是$\mathcal B_{\Sigma}$上的测度, 依题意, 我们需要将$(\Upsilon_\bullet,\nu _{\bullet,\bullet},\Gamma _{\mathscr A_\bullet})$延拓到$(\Sigma ,\mu ,\Gamma _{\mathscr A})$. 我们只需说明:
+              \begin{itemize}
+                  \item $\sp\mathscr A_\bullet\Subset\mathscr A$(嵌入意义下); 给定一个乘性线性泛函$f$, 令$\tilde f(x)=f(x|_{H_\bullet})$. 由于$H_i$是$\mathscr A$不变子空间, 故这个延拓是合理的. 因此可以验证$\sp\mathscr A_\bullet\Subset\mathscr A$.
+                  \item 在第一款意义下, $\Gamma _{\mathscr A_\bullet}(x|_{H_\bullet})=\Gamma (x)|_{\Upsilon_\bullet}$; 由上, $\Gamma _{\mathscr A}(x)(\tilde f)=\Gamma _{\mathscr A_\bullet}(x|_{H_\bullet})(f)$, 其中$f\in \Upsilon_\bullet$.
+                  \item 存在测度$\mu _\bullet(E)\coloneqq \mu _{v_\bullet,v_\bullet}(E)=\nu _{v_\bullet,v_\bullet}(E\cap \Upsilon_\bullet)$. 其中$\mu _\bullet:\Sigma\to [0,\infty]$. 如下图, 限制映射诱导了$C(\Sigma )\to C(\Upsilon_\bullet)$的满射(Tietze延拓定理), 故诱导了其对偶空间的单拉回:
+                        \[
+                            \begin{array}{ccccc}
+                                C(\Sigma)                                                               & \symbol{"F3A03}\mkern1mu\mathord{\xrightarrow{\hspace*{2em}}} & C(\Sigma )^*          & \cong & M(\Sigma )          \\[4pt]
+                                \makebox[0pt][r]%
+                                {$\scriptstyle \operatorname{rest}_{\Upsilon_\bullet}$}%
+                                \rotatebox[origin=c]{-90}
+                                {$\xrightarrow{\hspace*{2em}}\kern-2.2em\xrightarrow{\hspace*{1.8em}}$} & ~                                                             &
+                                \rotatebox[origin=c]{90}
+                                {$\symbol{"F3A05}\!\!\xrightarrow{\hspace*{2em}}$}
+                                \makebox[0pt][l]%
+                                {$\scriptstyle \operatorname{rest}^*_{\Upsilon_\bullet}$}                                                                                                                                     \\[10pt]
+                                C(\Upsilon_\bullet)                                                     & \symbol{"F3A03}\mkern1mu\mathord{\xrightarrow{\hspace*{2em}}} & C(\Upsilon_\bullet)^* & \cong & M(\Upsilon_\bullet)
+                            \end{array}
+                        \]
+                        其次, 这个测度$\mu _\bullet$可以恰好满足$\<{f^\vee v_\bullet,v_\bullet}=\int_ \Sigma f \d \mu $:
+                        \[\int_ \Sigma f \d \mu_\bullet =\<{f^\vee v_\bullet,v_\bullet}=\<{f^\vee|_{H_\bullet}v_\bullet,v_\bullet}=\<{(f|_{H_\bullet})^\vee v_\bullet,v_\bullet}=\int_{\Upsilon_\bullet}f\d \nu _{\bullet,\bullet}.\]
+              \end{itemize}
+              故在\textsc{Step~II.}中用$\mu _\bullet$替代原来的$\nu _{\bullet,\bullet}$可得到酉同构:
+              \[U:H\to \mathcal L^2(\mu ).\]
+        \item 令$\phi :x\mapsto \bigsqcup \hat{x}$. 由Gel'fand的$*$性得到其是个$*$-同态, 最后考虑其范数: 只需验证$\|x \| = \|\hat{x}\|_{\sup}$即可. 而这由Gel'fand\,--\,Naimark定理得到. 如果我们考虑将$\phi _x$视为$L(\mathcal L^2(\mu ))$中元, 则显然$\|\phi _x\|_{L(\mathcal L^2(\mu ))}\leqslant \|x\|$. 反之, 给定$E=\set{z\given |\phi _x(z)|\geqslant \|\phi _x\|_\infty-\varepsilon}$, 则$\mu (E)>0$, 由半有限性, $\exists F\subset E$, $\mu (F)\in(0,\infty)$. 故
+              \[\|\phi _x\mathbb 1_F\|_2\geqslant (\|\phi _x\|_\infty-\varepsilon)^2\mu (F)=(\|\phi _x\|_\infty-\varepsilon)^2\|\mathbb 1\|_2^2.\]
+              故$\|\phi _x\|_{L(\mathcal L^2(\mu ))}\geqslant \|\phi _x\|_\infty-\varepsilon$.
+        \item 最后按照惯例. 说明对$f\in B(\Sigma )$, $U f^\vee U^{-1} g=(\bigsqcup f)g$亦成立. 当$\operatorname{cl}\mathscr Av=H$时, 按第一款, $\|f^\vee v\|^2=\int |f|^2\d \mu $. 故$U:f^\vee v\mapsto f$, 剩下的情形直接代入即可. 在\textsc{Step II, III.}中, 每一个$\Sigma $上的$U_\bullet$都满足上面所讨论的, 故同理成立:
+              \[Uf^\vee U^{-1} g = (\bigsqcup f)g.\qedhere\]
+    \end{enumerate}
+\end{proof}
+\begin{remark}
+    考虑最喜欢的可分Hilbert空间, 可以令$\{v_\bullet\}$是稠密集的生成元, 因此其至多可数, 考虑缩放个常数可令$\sum\|v_\bullet\|=\|\mu \|<\infty$有限.
+\end{remark}
+\begin{cor}\label{pb->sot}
+    令$\{f_\bullet\}\xrightarrow{\text{p.b.}}f\in B(\Sigma )$, 则$f_\bullet^\vee \xrightarrow{\text{s.o.t.}}f^\vee$.
+\end{cor}
+\begin{proof}
+    令$f_n\xrightarrow{\text{p.b.}}f$, 故$\bigsqcup f_n\xrightarrow{\text{p.b.}} \bigsqcup f$. 由D.C.T.直接得到$\int |(f_n-f)g|^2\to 0$. 令$g=Uv$得到$\|(f_n-f)v\|=\|(f_n-f)Uv\|_2\to 0$.
+\end{proof}
+考虑正规算子$T$和其生成的\C*代数$\mathscr A_T$. 则$\sp \mathscr A_T\cong \sp T$, 同胚由Gel'fand变换$\hat{T}$诱导:
+\[f\mapsto f(T) \in \sp T.\]
+又$T=\int_{\sp \mathscr A_T}\hat{T}\d P = \int _{\sp T}\lambda \d P_T(\lambda )$, 其中$P_T(E)=P(\hat{T}^{-1} (E))$. 考虑被积函数非$\lambda $的情形:
+\[\int _{\sp T} \overline{\lambda} \d P_T(\lambda )=\int_{\sp \mathscr A_T}T^{*\land}\d P=T^*.\]
+故可以定义$f\in B(\sp T)$, $f(T)\coloneqq \int f\d P_T$. 称为Borel泛函算子演算.
+
+\begin{cor}[单正规算子的谱定理]
+    令$T\in L(H)$正规. 唯一$*$-同态$h_T:B(\sp T)\to L(H)$满足:
+    \begin{itemize}
+        \item $h_T(\operatorname{id})=T$;
+        \item $f_n\xrightarrow{\text{p.b.}}f\implies h_T(f)\xrightarrow{\text{s.o.t.}}h_T(f)$.
+    \end{itemize}
+    可认为$h_T(f)=f(T)$. 以及:
+    \begin{itemize}
+        \item 令$\mathscr A$是含$T$的交换\C*代数, 则$h_T(f)=\int f\circ \Gamma _{\mathscr A}(T)\d P_{\mathscr A}$;
+        \item 若$H=\mathcal L^2(\mu )$, 则$T$等价于$\mathcal L^2$乘子$\phi _T\in\mathcal L^\infty$, 且$f(T)$等价乘子$f\circ \phi _T$;
+        \item 若$S\in L(H)$满足$ST=TS$和$ST^*=T^*S$, 则$\forall f\in B(\sp T)$, 都有$Sf(T)=f(T)S$.
+    \end{itemize}
+\end{cor}
+\begin{proof}
+    令$h_T(f)=f(T)$, 则前第一款满足; 考虑$\mathscr A_T$, 则$\int_{\sp \mathscr A_T} f\d P_{\mathscr A}=f^\vee$, 故前第二款满足. $*$-同态由\autoref{int f dP is *}满足.
+
+    唯一性: 令$*$-同态$g_T$也满足此类关系, 令$\mathcal C=\set{f\given h_T(f)=g_T(f)}$, 则共轭多项式$\subset \mathcal C$. 只需证明所有有界函数$f\in B(\sp T)$都是共轭多项式的p.b.极限即可. 由于Stone\,--\,Weierstraß定理和$\sp T$紧致, 故$C(\sp T)\subset\mathcal C$. 同时由Urysohn引理, $\set{\mathbb 1_U\given\text{$U\subset \sp T$, open}}\subset\mathcal C$. 令$\mathcal M=\set{E\given \mathbb 1_E\in \mathcal C}$, 则$E\in\mathcal M\implies 1-\mathbb 1_E\in\mathcal C\implies E^\complement\in\mathcal M$; 同理由于$\mathbb 1_{\bigcap_{\text{finite}}E_\bullet}=\prod\mathbb 1_{E_\bullet}$故$\mathcal M$对有限交封闭; $\mathcal M$对可数交封闭由于可数交的特征函数是有限交情形的p.b.极限. 故是含开集的$\sigma $-代数, 即$\mathcal B_{\sp T}\subset \mathcal M$, 而用简单函数p.b.逼近有界可测函数即得.
+
+下面三个性质的证明: 后第一款来自唯一性, 故不随\C*代数选取而改变: 其中满足前第一二款来自$T=\int_{\sp\mathscr A}\Gamma _{\mathscr A}(T)\d P_{\mathscr A}$, \autoref{int f dP is *}保证其是$*$-同态, \autoref{pb->sot}得到前第二款.
+\end{proof}
+
+\begin{cor}[紧致正规算子的情形]
+    令$T\in L(H)$紧致正规, 则其谱至多可数, 且存在$H$的正交基包含其特征向量.
+\end{cor}
+\begin{proof}
+    由于$\ker(T-\lambda )$有限维, 故存在正交基.
+\end{proof}
+\begin{proof}
+    令$E_0=\{0\}$, $E_n=\set{\lambda\in\sp T\given |\lambda |\in[1 / n, 1 / (n-1))}$, $H_n=\operatorname{im}P(E_n)=\operatorname{im}\mathbb 1_{E_n}^\vee = \operatorname{im}\mathbb 1_{E_n}(T)$. 故由于各$E_n$不交, 则$H_n\mathbin{\bot} H_m$且$T$-不变.
+\end{proof}
+\section{拓扑群} 
+\def\Cc{C_{\textup{c}}}
+拓扑群是群上赋予拓扑满足$(x,y)\mapsto xy$, $x\mapsto x^{-1} $连续. 称子集$A\subset G$是对称的当且仅当$A^{-1} =A$.
+\begin{lemma}
+    \begin{itemize}
+        \item 给定$U$作为$1$的邻域, 存在对称邻域$V$满足$VV\subset U$;
+        \item $H\leqslant G\implies \overline{H}\leqslant G$;
+        \item $A,B\Subset G\implies AB\Subset G$.
+    \end{itemize}
+\end{lemma}
+\begin{proof}
+    \begin{itemize}
+        \item 由于$(x,y)\mapsto xy$连续, 存在$1$的邻域$A_1$, $A_2$满足$A_1A_2\subset U$, 令$V=A_1\cap A_2\cap A_1^{-1} \cap A_2^{-1} $, 则$VV\subset A_1\cap A_2\subset U$;
+        \item 令$x_ \bullet \to x$, $y_  \bullet\to y$, 则$x_\bullet y_\bullet \to xy$(由于$(x,y)\mapsto xy$连续), $x^{-1} $同理, 故$\overline{H}$是子群;
+        \item $A\times B\Subset G\times G\implies AB= (\cdot )(A \times B)\Subset G$.\qedhere
+    \end{itemize}
+\end{proof}
+\def\pj{\symsfit{π}}
+赋予$G / H$商拓扑, 则令$\pj :G \to G / H$, 则:
+\begin{itemize}
+    \item $V\subset G / H$开$\iff \pj ^{-1} (V)$开. 定义;
+    \item $U\subset G$开$\iff \pj (U)$开. 由于$\pj ^{-1} \circ \pj (U)=UH=\bigcup_{x\in H}Ux$开得到.
+\end{itemize}
+
+\begin{theorem}[拓扑群的Hausdorff化]
+    令$G$是局部紧群, $H$是闭正规子群, 则拓扑群$G / H\in\LCHaus$. 同时, $\overline{\{1\}}$是正规的.
+\end{theorem}
+\begin{proof}
+    令$\pj(x)$, $\pj(y)$是$G / H$中不同两点, 由于$H$闭, 则$xHy^{-1} $闭且不含$1$, 否则$\pj(x)=\pj(y)$. 存在$U$是$1$的对称邻域, 且 $UU\in (xHy^{-1} )^\complement$, 故
+    \[1\notin U^{-1} U^{-1} xH^{-1}\implies 1\notin  U^{-1} xH^{-1}U^{-1}=UxHH^{-1} y^{-1} U^{-1} =(UxH)(UyH)^{-1} .\]
+    故$1\in\pj (Ux)\cap \pj(Uy)$. 即是对应的分离两点的开集;
+
+    局部紧由投影映射连续, 将紧邻域打到紧邻域得到;
+
+    拓扑群的其他特性只需验证两个映射连续: 令$U$是$\pj(xy)$的开邻域, 则$\pj ^{-1} (U)$开, 由连续性, 存在$A_1$, $A_2$是$x$, $y$的开邻域且$A_1A_2\subset \pj^{-1} (U)$. 故$\pj(A_1)$, $\pj(A_2)$是开集且$\pj(A_1)\pj(A_2)\subset U$. 故乘法连续, 逆连续同理.
+
+
+    最后验证$\overline{\{1\}}$的正规性. 反之, 则存在$g$满足$g\overline{\{1\}}g^{-1} \neq \overline{\{1\}}$, 但$g\overline{\{1\}}g^{-1} \neq \overline{\{1\}}\cap \overline{\{1\}}$是闭集且真包含于$\overline{\{1\}}$, 于其是极小含$1$闭集矛盾.
+\end{proof}
+因此只需商掉$\overline{\{1\}}$便可完成群的Hausdorff化.
+
+由于实在抽象的拓扑空间上讨论, 一般会希望其是$\sigma $-紧致的好利用正规Radon测度. 而考虑紧邻域的叠加仍是紧邻域, 考虑$V\Subset G$是$1$的对称邻域, 则$G_0=\bigcup_{n\geqslant 1}\underbrace{V\cdots V}_{n}$是$\sigma $-紧致的, 我们希望他能撑满至少一个连通分支:
+\begin{prop}
+    上述考虑的子群是既开又闭的.
+\end{prop}
+\begin{proof}
+    $U$的选取可由一般的紧致邻域$K$交上$K^{-1} $得到. 由于$K^\circ$非空, 故$\bigl(\underbrace{V\cdots V}_{n+1}\bigr)^\circ\setminus \bigl(\underbrace{V\cdots V}_{n}\bigr)$非空, 也即是$G_0$是开的, 故是闭的.
+\end{proof}
+
+\def\Ltrans{\mathrm{L}}
+\def\Rtrans{\mathrm{R}}
+\subsection{Haar测度}
+Haar测度是拓扑群上Borel(左或右)传递不变的Radon测度. 定义传递因子:
+\[\Ltrans_y f(x)=f(y^{-1} x),\quad \Rtrans_yf(x)=f(xy).\]
+则$\Ltrans_y\Ltrans_z=\Ltrans_{yz}$, $\Rtrans_y\Rtrans_z=\Rtrans_{yz}$.
+\begin{prop}
+    令$f\in \Cc(G)$, 则$f$左右一致连续. 其中左右一致连续定义为:
+    \[\|\Ltrans_\bullet f-f\|_{\sup}\to 0,\quad \|\Rtrans_\bullet f-f\|_{\sup}\to 0.\]
+\end{prop}
+\begin{proof}
+    只证明右一致情形. 则$\forall x\in \supp f$, $\exists U_x$是$1$的邻域满足$y\in U_x\implies |f(xy)-f(x)|<\varepsilon /2$. 则存在对称邻域$V_x$满足$V_x V_x\subset U_x$. 故由紧致性
+    \[\supp f\subset \bigcup_{\text{finite}} x_\bullet V_{x_\bullet}.\]
+    令$V=\bigcap V_{x_\bullet}$. 若$x\in\supp f$, 则$\exists x_j$, $x_j^{-1} x\subset V_{x_j}$. 故$xy\subset x_jU_{x_j}$. 则
+    \[|f(xy)-f(x)|\leqslant |f(xy)-f(x_j)|+|f(x_j)-f(x)|<\varepsilon.\]
+    $x\notin\supp K$时, 要么$xy\in\supp f\implies |f(xy)-f(x)|<\varepsilon$, 要么$xy\notin \supp K$, 此时两者都为$0$.
+\end{proof}
+
+\begin{prop}
+    考虑在局部紧群上的Haar测度, 有:
+    \begin{itemize}
+        \item $\mu $左Haar$\iff \mu ^\sim$右Haar;
+        \item $\mu $左Haar$\iff \forall f\in \Cc^+(G)$, $\int \Ltrans_\bullet f\d \mu =\int f \d \mu $.
+    \end{itemize}
+\end{prop}
+\begin{proof}
+    第一款右传递不变性显然, 只需证明其Radon:
+    \begin{itemize}
+        \item $E\in \mathcal B_G\iff E^{-1} \in\mathcal B_G$. 考虑$\mathscr A=\set{E^{-1} \given E\in\mathcal B_G}$. 则$\mathscr A$是$\sigma $-代数. 且易见$\mathscr A$含所有开集, 故$\mathcal B_G\subset\mathscr A$. 故$E\in\mathcal B_G\iff E^{-1} \in\mathcal B_G$.
+        \item Radon性. 局部有限由$^{-1} $将紧集打到紧集得到. 考虑正规性:
+              \[\begin{aligned}
+                      \mu ^\sim(A)=\mu(A^{-1} ) & =\inf\set{\mu (U)\given \text{$A^{-1} \subset U$, $U$ open}}   \\
+                                                & =\inf\set{\mu (U^{-1} )\given \text{$A \subset U$, $U$ open}}.
+                  \end{aligned}\]
+              故是外正规的. 内正规性同理.
+    \end{itemize}
+    对第二款考虑$f$是简单函数是成立, 故由积分定义对连续紧支函数成立. 另一个方向来自于Radon测度由其在连续紧支函数上的作用直接决定(Riesz表示定理).
+\end{proof}
+\begin{theorem}[Weyl]
+    对于局部紧群, 左(或右)Haar测度存在且在相差一个常数下唯一.
+\end{theorem}
+\begin{proof}
+    考虑到复杂的Radon性, 直接定义Haar测度远比定义在$\Cc^+(G)$上的正线性泛函然后再用Riesz表示定理还原出测度困难.
+
+    定义连续紧支函数的积分的关键是用类似$\mathbb 1_U$的函数去逼近其: 令$\phi $的支集很小且$0\leqslant \phi \leqslant 1$, 则可以令
+    \[\begin{aligned}
+            \underline{S}_ \phi  f & \coloneqq \sup\set[\Big][~]{\sum c_\bullet\given 0\leqslant \sum c_\bullet \Ltrans_\bullet \phi \leqslant f}, \\
+            \overline{S}_ \phi  f  & \coloneqq \inf\set[\Big][~]{\sum c_\bullet\given  \sum c_\bullet \Ltrans_\bullet \phi\geqslant  f}.           \\
+        \end{aligned}\]
+    作为积分的原型. 我们主要采用后一种, 由于$\phi $并非特征函数, 因此需要用更大的空间处理$\phi $从$1$到$0$的过渡区域.
+
+    定义这样的积分之后, 我们需要总某个空间里让$\phi $取极限: 也就是$\supp \phi \to \{1\}$的情形.
+
+    为方便, 记$\overline{S}_ \phi  f$为$(f\mid\phi )$, 则:
+    \begin{itemize}
+        \item $(f\mid\phi )$左传递不变;
+        \item $(f\mid\phi )$次线性;
+        \item $c>0$, 则$(cf\mid\phi )=c(f\mid \phi )$;
+        \item $(f\mid \phi )\geqslant \|f\|_{\sup} / \|\phi \|_{\sup}$;
+        \item $(f\mid \phi )\leqslant (f\mid g)(g\mid \phi )$. 由于后者是$\inf\set[\big]{\sum_{i,j} b_i c_j\given  f\leqslant \sum b_\bullet \Ltrans_\bullet g,\,g\leqslant \sum c_\bullet \Ltrans_\bullet \phi }$.
+    \end{itemize}
+    令$f_0$是一个一般的连续紧支函数, 考虑两个覆盖数的比(归一化):
+    \[I_ \phi (f) \coloneqq \frac{(f\mid \phi )}{(f_0\mid \phi )}.\]
+    则容易验证$I_ \phi (f)\in[(f_0\mid f)^{-1},(f\mid f_0)]$. 考虑在$\bigcup_{f\in\Cc^+(G)}[(f_0\mid f)^{-1},(f\mid f_0)]$中取极限, 后者$\in\CHaus$, 故令$K_V=\overline{\set{I_ \phi \given \supp \phi \subset V}}$. 则其紧致且有限交非空(只需保证$1\in V$). 故
+    \[\bigcap_{1\in V} K_V\]非空.
+\end{proof}
+
+
+\end{document}

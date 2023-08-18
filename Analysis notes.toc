@@ -1,0 +1,15 @@
+\contentsline {section}{\numberline {1}分\kern \ccwd 布}{1}{section.1}%
+\contentsline {paragraph}{分布与identity}{2}{paragraph*.2}%
+\contentsline {paragraph}{分布的函数}{3}{paragraph*.3}%
+\contentsline {paragraph}{缓增分布$\symscr S^*$}{5}{paragraph*.4}%
+\contentsline {section}{\numberline {2}Hilbert变换}{6}{section.2}%
+\contentsline {section}{\numberline {3}Calder\'on\,--\,Zygmind\ignorespaces 奇异积分}{9}{section.3}%
+\contentsline {subsection}{\numberline {3.1}奇核与旋转方法}{10}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}偶核与Riesz变换}{12}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Banach代数和谱理论}{15}{section.4}%
+\contentsline {subsection}{\numberline {4.1}含幺Banach代数中的可逆元}{16}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Banach\/$^*$代数和\ensuremath {\text {C}^*}代数}{19}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Banach\/$^*$代数和\ensuremath {\text {C}^*}代数的幺}{21}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}谱定理}{23}{subsection.4.4}%
+\contentsline {section}{\numberline {5}拓扑群}{30}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Haar测度}{31}{subsection.5.1}%
